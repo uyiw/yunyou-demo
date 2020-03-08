@@ -4,7 +4,9 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+img{
+  border:none;
+}
 ul li {
   list-style: none;
 }
@@ -31,7 +33,34 @@ ul li {
   cursor: not-allowed;
 }
 
-
+.common-swiper{
+  height: 362px;
+  width: 100%;
+  position: relative;
+  .van-swipe {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  .van-swipe-item {
+    & > img {
+      width: 100%;
+      height: 100%;
+    }
+    }
+    .van-swipe__indicators {
+      margin-bottom: 20px;
+      transform: translateX(0);
+      right:40px;
+      left:auto;
+    }
+    .van-swipe__indicator {
+      width: 12px;
+      height: 12px;
+      margin-right: 15px;
+      
+    }
+  }
+}
 .common-header {
   height: 430px;
   width: 100%;
@@ -99,5 +128,115 @@ ul li {
         font-size: 26px;
       }
     }
+  }
+}
+.common-nav-box{
+  width:750px;
+  height:88px;
+  .common-nav{
+    width:100%;
+    height:88px;
+    background:rgba(65,206,134,1);
+    position: fixed;
+    left:0px;
+    top:0px;
+    .common-nav-back{
+      width:48px;
+      height:48px;
+      position: absolute;
+      left:30px;
+      top:20px;
+    }
+    .common-nav-text{
+      width:100%;
+      height:88px;
+      line-height:88px;
+      font-size:34px;
+      font-family:PingFangSC-Medium,PingFang SC;
+      font-weight:500;
+      color:rgba(255,255,255,1);
+      text-align: center;
+    }
+  }
+}
+.common-point-title-box{
+  width:100%;
+  display: flex;
+  align-items: center;
+  padding-top:20px;
+  .common-point{
+    width:12px;
+    height:12px;
+    background:rgba(1,190,94,1);
+    border-radius: 50%;
+    margin-right:16px;
+  }
+  .common-point-title{
+    height:42px;
+    font-size:30px;
+    font-family:PingFangSC-Regular,PingFang SC;
+    font-weight:400;
+    color:rgba(1,190,94,1);
+    line-height:42px;
+  }
+}
+.common-detail-name-box{
+  width:100%;
+  height:94px;
+  position: relative;
+  border-bottom: 1px solid rgba(238,238,238,1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .common-detail-name-white{
+      left:-40px;
+      top:0;
+      bottom: 0;
+      margin:auto;
+      position: absolute;
+      width:20px;
+      height:49px;
+      background:rgba(0,190,94,1);
+  }
+  .common-detail-name{
+      height:56px;
+      font-size:40px;
+      font-family:PingFangSC-Regular,PingFang SC;
+      font-weight:400;
+      color:rgba(45,45,45,1);
+      line-height:56px;
+      flex-shrink: 0;
+  }
+  .common-detail-like-box{
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      &>div{
+        height:42px;
+        font-size:30px;
+        font-family:PingFangSC-Regular,PingFang SC;
+        font-weight:400;
+        color:rgba(45,45,45,1);
+        line-height:42px;
+      }
+      &>img{
+        width:39px;
+        height:33px;
+        margin-left:10px;
+      }
+  }
+}
+.common-point-card-box{
+  width:100%;
+  .common-point-card-content{
+    width:100%;
+    box-sizing: border-box;
+    padding-left:26px;
+    margin-top:12px;
+    font-size:26px;
+    font-family:PingFangSC-Regular,PingFang SC;
+    font-weight:400;
+    color:rgba(45,45,45,1);
+    line-height:37px;
   }
 }
