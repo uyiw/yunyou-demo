@@ -1,0 +1,35 @@
+.news-list {
+  min-height: 100vh;
+  background: #F3F3F3;
+  .news-list-con {
+    & > div {
+      width: 100%;
+      height: 90px;
+      padding: 0 30px;
+      margin-bottom: 10px;
+      background: #fff;
+      & > img {
+        &:nth-child(1) {
+          width: 38px;
+          height: 38px;
+          margin-right: 20px;
+          margin-top: 26px;
+        }
+      }
+      .next {
+        width: 31px;
+        height: 33px;
+        margin-top: 29px;
+      }
+      & > p {
+        font-size: 36px;
+        color: #545454;
+        width: 86%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin: 20px 0;
+      }
+    }
+  }
+}
