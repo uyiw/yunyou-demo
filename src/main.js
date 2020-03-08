@@ -6,6 +6,9 @@ import router from './router'
 import 'lib-flexible/flexible'
 import Vant from 'vant/lib/vant.js'
 import 'vant/lib/index.css'
+import 'swiper/dist/css/swiper.css'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+Vue.use(VueAwesomeSwiper)　
 
 Vue.use(Vant);
 
