@@ -1,7 +1,7 @@
 <template>
   <div class="common-point-card-box">
-    <pointTitle></pointTitle>
-    <div class="common-point-card-content"></div>
+    <pointTitle :isPadding="isPadding" :text="text"></pointTitle>
+    <div class="common-point-card-content" :show="content!=''">{{content}}</div>
   </div>
 </template>
 <script>
@@ -15,6 +15,10 @@ export default {
       isPadding:{
           type:Boolean,
           default:true
+      },
+      content:{
+          type:String,
+          default:''
       }
   },
   data() {

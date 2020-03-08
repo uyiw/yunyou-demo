@@ -4,8 +4,12 @@
     <commonSwiper :bannerList="bannerList"></commonSwiper>
     <div class="xiangsu-detail-content">
         <detailNameBox :name="detailInfo.name" :likeCount="detailInfo.likeCount"></detailNameBox>
-        
         <pointTitle></pointTitle>
+        <div class="xiangsu-detail-point-box">
+            <div v-for="(item, index) in detailInfo.detail" :key="index" class="xiangsu-detail-point-item">
+                <pointCard :isPadding="false" :content="item.content" :text="item.title"></pointCard>
+            </div>
+        </div>
     </div>
   </div>
 </template>
@@ -14,6 +18,7 @@ import commonSwiper from '../components/commonSwiper'
 import commonNav from '../components/commonNav'
 import pointTitle from '../components/pointTitle'
 import detailNameBox from '../components/detailNameBox'
+import pointCard from '../components/pointCard'
 export default {
   data() {
     return {
@@ -25,6 +30,13 @@ export default {
       detailInfo:{
           name:'归心精品小院',
           likeCount:10000,
+          detail:[{
+              title:'详情介绍',
+              content:'2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，'
+          },{
+              title:'接待能力',
+              content:'2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，'
+          }]
       },
       navText:'详情'
     }
@@ -33,7 +45,8 @@ export default {
     commonSwiper,
     commonNav,
     pointTitle,
-    detailNameBox
+    detailNameBox,
+    pointCard
   }
 }
 </script>
