@@ -2,12 +2,17 @@
   width:100%;
   .xiangsu-detail-content{
     width:100%;
-    box-sizing: border-box;
     padding:0px 40px 20px;
     background: white;
     .xiangsu-detail-point-box{
         width:100%;
         margin-top:15px;
+        .xiangsu-detail-point-item{
+            width:100%;
+            padding:20px 14px 30px 20px;
+            background:rgba(247,247,247,1);
+            margin-bottom: 20px;
+        }
     }
   }
 }

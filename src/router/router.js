@@ -18,7 +18,10 @@ export default[
   {
     path: '/xiangsu',
     name: 'xiangsu',
-    component: () => import('@/view/xiangsu')
+    component: () => import('@/view/xiangsu'),
+    meta: {
+      title: 'index'
+    }
   },
   {
     path: '/xiangsuDetail',

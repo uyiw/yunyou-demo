@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import pointTitle from '../components/pointTitle'
+import pointTitle from '../common/pointTitle'
 export default {
   props:{
       text:{
@@ -30,3 +30,19 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .common-point-card-box{
+    width:100%;
+    .common-point-card-content{
+      width:100%;
+      box-sizing: border-box;
+      padding-left:26px;
+      margin-top:12px;
+      font-size:26px;
+      font-family:PingFangSC-Regular,PingFang SC;
+      font-weight:400;
+      color:rgba(45,45,45,1);
+      line-height:37px;
+    }
+  }
+</style>
