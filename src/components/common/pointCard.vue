@@ -1,7 +1,7 @@
 <template>
   <div class="common-point-card-box">
     <pointTitle :isPadding="isPadding" :text="text"></pointTitle>
-    <div class="common-point-card-content" :show="content!=''">{{content}}</div>
+    <div class="common-point-card-content" v-if="content!=''">{{content}}</div>
   </div>
 </template>
 <script>

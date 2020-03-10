@@ -27,5 +27,18 @@ export default[
     path: '/xiangsuDetail',
     name: 'xiangsuDetail',
     component: () => import('@/view/xiangsuDetail')
+  },
+  {
+    path: '/techan',
+    name: 'techan',
+    component: () => import('@/view/techan'),
+    meta: {
+      title: 'index'
+    }
+  },
+  {
+    path: '/techanDetail',
+    name: 'techanDetail',
+    component: () => import('@/view/techanDetail')
   }
 ]

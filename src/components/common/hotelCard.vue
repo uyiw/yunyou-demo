@@ -107,7 +107,6 @@ export default {
         .common-hotel-item-right-name,.common-hotel-item-right-dis{
             width:100%;
             overflow:hidden;
-            overflow: hidden;
             text-overflow:ellipsis;
             white-space: nowrap;
         }

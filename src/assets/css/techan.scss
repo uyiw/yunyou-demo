@@ -1,0 +1,82 @@
+#techan {
+    .techan-content{
+        width:100%;
+        padding:0 30px 20px;
+    }
+    .techan-select-box{
+        width:723px;
+        height:60px;
+        display: flex;
+        align-items: center;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-left:-15.75px;
+        margin-top:20px;
+        margin-bottom:30px;
+        border:1.5px solid rgba(1,190,94,1);
+        &>div{
+            width:180px;
+            height:58px;
+            line-height: 58px;
+            border-left:1px solid rgba(1,190,94,1);
+            font-size:28px;
+            font-family:PingFangSC-Regular,PingFang SC;
+            font-weight:400;
+            color:rgba(85,85,85,1);
+            text-align: center;
+        }
+        &>div:nth-of-type(1){
+            border-left:none;
+        }
+        .active{
+            background:rgba(1,190,94,1);
+            color:rgba(255,255,255,1);
+        }
+    }
+    .techan-list-box{
+        width:100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        .techan-item{
+            width:330px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 11px;
+            margin-left:30px;
+            .techan-item-img{
+                width:330px;
+                height:330px;
+            }
+            .techan-item-name-box{
+                width:100%;
+                display: flex;
+                justify-content: space-between;
+                margin-top:10px;
+                padding-right:10px;
+                align-items: center;
+                &>div{
+                    width:280px;
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                    white-space: nowrap;
+                    height:45px;
+                    font-size:32px;
+                    font-family:PingFangSC-Regular,PingFang SC;
+                    font-weight:400;
+                    color:rgba(11,11,11,1);
+                    line-height:45px;
+                }
+                &>img{
+                    width:24px;
+                    height:23px;
+                    margin-right:10px;
+                }
+            }
+        }
+        .techan-item:nth-of-type(2n+1){
+            margin-left:0px;
+        }
+    }
+  }
+  
