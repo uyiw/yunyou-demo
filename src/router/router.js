@@ -40,5 +40,31 @@ export default[
     path: '/techanDetail',
     name: 'techanDetail',
     component: () => import('@/view/techanDetail')
-  }
+  },
+  {
+    path: '/paysuccess',
+    name: 'paysuccess',
+    component: () => import('@/view/paySuccess')
+  },
+  {
+    path: '/paytotal',
+    name: 'paytotal',
+    component: () => import('@/view/payTotal')
+  },
+  {
+    path: '/my',
+    name: 'my',
+    component: () => import('@/view/my'),
+    meta: {
+      title: 'wode'
+    }
+  },
+  {
+    path: '/message',
+    name: 'message',
+    component: () => import('@/view/message'),
+    meta: {
+      title: 'wode'
+    }
+  },
 ]

@@ -16,9 +16,11 @@
             <div class="buy-now">立即购买</div>
         </div>
     </div>
+    <car />
   </div>
 </template>
 <script>
+import car from "./car"
 export default {
   props:{
       name:{
@@ -33,6 +35,9 @@ export default {
   data() {
     return {
     }
+  },
+  components:{
+    car,
   }
 }
 </script>
