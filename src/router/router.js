@@ -67,4 +67,12 @@ export default[
       title: 'wode'
     }
   },
+  {
+    path: '/order',
+    name: 'order',
+    component: () => import('@/view/order'),
+    meta: {
+      title: 'wode'
+    }
+  },
 ]
