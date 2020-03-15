@@ -1,6 +1,6 @@
 <template>
   <div id="xiangsu">
-    <commonNav :navText="navText"></commonNav>
+    <commonNav :navText="navText" :back="true"></commonNav>
     <commonHeader :bannerList="bannerList"></commonHeader>
     <div class="xiangsu-content">
       <div class="xiangsu-select-box">

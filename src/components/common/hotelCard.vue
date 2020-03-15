@@ -1,5 +1,5 @@
 <template>
-  <div class="common-hotel-item" :style="isEnd?{bodderBottom:'none'}:{}">
+  <div class="common-hotel-item" :style="isEnd?{bodderBottom:'none'}:{}" @click="goToDetail()">
     <img :src="hotelItem.img" class="common-hotel-item-img"/>
     <div class="common-hotel-item-right">
         <div class="common-hotel-item-right-name">{{hotelItem.name}}</div>
@@ -34,7 +34,12 @@ export default {
     }
   },
   components: {
-  }
+  },
+  methods: {
+    goToDetail: function() {
+      this.$router.push('/xiangsuDetail')
+    }
+  },
 }
 </script>
 <style lang="scss">
@@ -111,6 +116,6 @@ export default {
             white-space: nowrap;
         }
     }
-    
+
 }
 </style>

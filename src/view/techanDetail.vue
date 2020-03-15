@@ -2,7 +2,6 @@
   <div id="techan-detail">
     <commonNav :navText="navText"></commonNav>
     <commonSwiper :bannerList="bannerList"></commonSwiper>
-    
     <div class="techan-detail-content">
         <detailNameBox :name="detailInfo.name"></detailNameBox>
         <pointTitle text="推荐购买地址"></pointTitle>

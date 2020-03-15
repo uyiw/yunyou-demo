@@ -87,6 +87,14 @@
             }
           }
         }
+        .addNew {
+          display: flex;
+          align-items: center;
+          .van-icon {
+            margin-left: 10px;
+            color:rgba(0,0,0,1);
+          }
+        }
       }
       & > img {
         width: 100%;

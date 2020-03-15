@@ -2,21 +2,21 @@
   <div id="shouye">
     <commonHeader :bannerList="bannerList"></commonHeader>
     <div class="shouye-type">
-      <router-link tag="div" to=""><img src="../assets/img/jingqu.png" />景区</router-link>
-      <router-link tag="div" to=""><img src="../assets/img/xiangsu.png" />乡宿</router-link>
-      <router-link tag="div" to=""><img src="../assets/img/canyin.png" />餐饮</router-link>
-      <router-link tag="div" to=""><img src="../assets/img/techan.png" />特产</router-link>
+      <router-link tag="div" to="/scenicList"><img src="../assets/img/jingqu.png" />景区</router-link>
+      <router-link tag="div" to="/xiangsu"><img src="../assets/img/xiangsu.png" />乡宿</router-link>
+      <router-link tag="div" to="/foodList"><img src="../assets/img/canyin.png" />餐饮</router-link>
+      <router-link tag="div" to="/techan"><img src="../assets/img/techan.png" />特产</router-link>
     </div>
     <div class="shouye-new clearfix">
       <div class="pull-left">云游头条</div>
       <img src="../assets/img/laba.png" class="pull-left" />
       <div class="pull-left news-detail">{{ newsDetail }}</div>
-      <p class="pull-right">更多<img src="../assets/img/next.png" /></p>
+      <router-link tag="p" to="/newsList" class="pull-right">更多<img src="../assets/img/next.png" /></router-link>
     </div>
     <div class="shouye-banner">
       <swiper :options="swiperOption">
         <swiper-slide v-for="(item, index) in bannerList1" :key="index">
-          <img :src="item" />
+          <img :src="item" @click="goToDetail(index)" />
         </swiper-slide>
       </swiper>
     </div>
@@ -32,7 +32,7 @@
             <p>推荐指数: <span><span>{{ item.score }}</span> 分</span></p>
             <p>有{{ item.num }}在此打卡</p>
           </div>
-          <router-link class="pull-right" tag="span" to="">查看<br />详情</router-link>
+          <router-link class="pull-right" tag="span" :to="'/scenicDetail?id='+index">查看<br />详情</router-link>
         </div>
       </div>
     </div>
@@ -91,6 +91,9 @@ export default {
   methods: {
     tabClick: function(index) {
       this.tabIndex = index
+    },
+    goToDetail: function(index) {
+      this.$router.push('/attractions')
     }
   }
 }

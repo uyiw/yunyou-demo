@@ -20,13 +20,16 @@ export default[
     name: 'xiangsu',
     component: () => import('@/view/xiangsu'),
     meta: {
-      title: 'index'
+      title: 'njb'
     }
   },
   {
     path: '/xiangsuDetail',
     name: 'xiangsuDetail',
-    component: () => import('@/view/xiangsuDetail')
+    component: () => import('@/view/xiangsuDetail'),
+    meta: {
+      title: 'njb'
+    }
   },
   {
     path: '/techan',
@@ -72,6 +75,13 @@ export default[
     meta: {
       title: 'index'
     }
+  },{
+    path: '/scenicList',
+    name: 'scenicList',
+    component: () => import('@/view/scenicList'),
+    meta: {
+      title: 'index'
+    }
   },
   {
     path: '/scenicDetail',
@@ -112,5 +122,39 @@ export default[
     meta: {
       title: 'travels'
     }
-  }
+  },
+  {
+    path: '/paysuccess',
+    name: 'paysuccess',
+    component: () => import('@/view/paySuccess')
+  },
+  {
+    path: '/paytotal',
+    name: 'paytotal',
+    component: () => import('@/view/payTotal')
+  },
+  {
+    path: '/my',
+    name: 'my',
+    component: () => import('@/view/my'),
+    meta: {
+      title: 'wode'
+    }
+  },
+  {
+    path: '/message',
+    name: 'message',
+    component: () => import('@/view/message'),
+    meta: {
+      title: 'wode'
+    }
+  },
+  {
+    path: '/order',
+    name: 'order',
+    component: () => import('@/view/order'),
+    meta: {
+      title: 'wode'
+    }
+  },
 ]

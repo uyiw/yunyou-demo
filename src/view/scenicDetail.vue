@@ -20,18 +20,6 @@
       </div>
       <div class="scenicDetail-scenic">
         <div class="common-point-title-box" style="padding-top: 0px;">
-          <div class="common-point"></div> <div class="common-point-title">区域内景点</div>
-        </div>
-        <div class="scenicDetail-scenic-list">
-          <div v-for="(item, index) in scenicDetail.scenic" :key="index">
-            <img :src="item.url" />
-            <p>{{ item.title }}</p>
-          </div>
-        </div>
-        <p>查看全部</p>
-      </div>
-      <div class="scenicDetail-scenic">
-        <div class="common-point-title-box" style="padding-top: 0px;">
           <div class="common-point"></div> <div class="common-point-title">区域内餐饮</div>
         </div>
         <div class="scenicDetail-scenic-list">

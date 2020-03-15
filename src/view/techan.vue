@@ -32,7 +32,7 @@ export default {
         require('@/assets/img/2.png')
       ],
       activeId:0,
-      navText:'乡宿',
+      navText:'特产',
       selectTag:[{
         text:'热门'
       },{

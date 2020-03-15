@@ -10,13 +10,14 @@
       <span :class="{'choose': item.id === tabIndex}" @click="tabClick(item.id)" v-for="(item, index) in tabList" :key="index">{{ item.name }}</span>
     </div>
     <div class="travels-list">
-      <div class="travels-list-con" v-for="(item, index) in travelsList" :key="index">
+      <div class="travels-list-con" v-for="(item, index) in travelsList" :key="index" @click="goToDetail(index)">
         <div class="travels-list-con-top clearfix">
           <img :src="item.headUrl" class="pull-left" />
           <div class="pull-left">
             <p>{{ item.name }}</p>
             <p>{{ item.time }}出游</p>
           </div>
+          <div class="pull-right addNew">新增<van-icon name="plus" /></div>
         </div>
         <img :src="item.url" />
         <p>{{ item.content }}</p>
@@ -85,6 +86,9 @@ export default {
   methods: {
     tabClick: function(id) {
       this.tabIndex = id;
+    },
+    goToDetail: function(index) {
+      this.$router.push('/travelsDetail')
     }
   }
 }
