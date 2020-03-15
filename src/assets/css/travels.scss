@@ -1,0 +1,102 @@
+#travels {
+  .travels-top {
+    padding: 0 40px;
+    height: 80px;
+    line-height: 80px;
+    & > p {
+      font-size:30px;
+      font-weight:400;
+      color:rgba(62,62,62,1);
+      line-height:42px;
+      display: flex;
+      align-items: center;
+      padding: 19px 0;
+      margin-right: 20px;
+      & > img {
+        width: 30px;
+        height: 38px;
+        margin-right: 13px;
+      }
+      & > span {
+        display: inline-block;
+        width: 97px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .van-search {
+      margin: 10px 0;
+      width: 510px;
+      height: 60px;
+      text-align: center;
+      background: #EFF0F2;
+      .van-search__content {
+        background: #EFF0F2;
+      }
+      .van-field__left-icon {
+        display: none;
+      }
+      .van-field__control {
+        text-align: center;
+      }
+    }
+  }
+  .travels-tab {
+    text-align: right;
+    font-size:28px;
+    font-weight:400;
+    line-height:40px;
+    height: 80px;
+    padding: 20px 0;
+    & > span {
+      padding: 0 22px;
+      margin: 0 20px;
+    }
+    .choose {
+      background: #00BE5E;
+      color: #fff;
+      border-radius:4px;
+    }
+  }
+  .travels-list {
+    margin-top: 20px;
+    padding: 0 20px;
+    .travels-list-con {
+      margin-bottom: 30px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      .travels-list-con-top {
+        padding: 0 10px;
+        & > img {
+          width: 100px;
+          height: 100px;
+          margin-right: 10px;
+          border-radius: 50%;
+        }
+        & > div {
+          margin-top: 10px;
+          font-weight:400;
+          color:rgba(0,0,0,1);
+          line-height:42px;
+          font-size:26px;
+          & > p {
+            &:nth-child(1) {
+              font-size:30px;
+            }
+          }
+        }
+      }
+      & > img {
+        width: 100%;
+        margin: 20px 0 5px;
+      }
+      & > p {
+        font-size:30px;
+        font-weight:400;
+        color:rgba(45,45,45,1);
+        line-height:42px;}
+    }
+  }
+}

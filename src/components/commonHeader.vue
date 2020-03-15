@@ -1,5 +1,5 @@
 <template>
-  <div class="common-header">
+  <div :class="height ? 'common-header changeHeight' : 'common-header'">
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="(item, index) in bannerList" :key="index">
         <img :src="item">
@@ -15,9 +15,10 @@
 </template>
 <script>
 export default {
-  props: ['bannerList'],
+  props: ['bannerList', 'height'],
   data() {
     return {
+
       address: '北京',
       value: ''
     }

@@ -1,0 +1,69 @@
+.scenicDetail {
+  .scenicDetail-context{
+    padding: 0 40px;
+    & > h3 {
+      font-size:36px;
+      font-weight:400;
+      color:rgba(45,45,45,1);
+      line-height:50px;
+      margin: 10px 0;
+    }
+    & > p {
+      font-size:24px;
+      font-weight:400;
+      color:rgba(81,81,81,1);
+      line-height:33px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 47px;
+      & > img {
+        width: 32px;
+        height: 36px;
+        margin-right: 15px;
+      }
+    }
+    .scenicDetail-context-con {
+      font-size:26px;
+      font-weight:400;
+      color:rgba(45,45,45,1);
+      line-height:37px;
+      margin-bottom: 53px;
+    }
+    .scenicDetail-scenic {
+      margin-bottom: 20px;
+      .common-point-title-box {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+      }
+      .scenicDetail-scenic-list {
+        margin-top: 20px;
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        & > div {
+          flex: 1;
+          width: 136px;
+          margin-right: 40px;
+          font-size: 26px;
+          color: #2d2d2d;
+          line-height: 37px;
+          text-align: center;
+          margin-bottom: 20px;
+          &:nth-child(4n) {
+            margin-right: 0;
+          }
+          & > img {
+            width: 136px;
+            height: 128px;
+          }
+        }
+      }
+      & > p {
+        color: rgba(42, 130, 228, 1);
+        font-size: 14px;
+        text-align: center;
+      }
+    }
+  }
+}

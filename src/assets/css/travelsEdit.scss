@@ -1,0 +1,172 @@
+#travelsEdit {
+  margin-bottom: 40px;
+  .travelsEdit-img {
+    width: 100%;
+    height:360px;
+    position: relative;
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background:rgba(159,207,184,1);
+      & > img {
+        width: 130px;
+        height: 130px;
+      }
+      & > span {
+        margin-left: 40px;
+        font-size:36px;
+        font-weight:400;
+        color:rgba(45,45,45,1);
+        line-height:130px;
+      }
+    }
+    & > input {
+      position: absolute;
+      top: -10000px;
+    }
+    & > img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .van-cell {
+    height: 80px;
+    padding: 0 30px;
+    line-height: 80px;
+    font-size:36px;
+    font-weight:400;
+    color:rgba(45,45,45,1);
+    margin: 20px 0;
+    border: 0!important;
+    input {
+      border: 0!important;
+    }
+    .van-field__value {
+      border: 0!important;
+    }
+    .van-field__body {
+      border: 0!important;
+    }
+    input::-webkit-input-placeholder{
+      color:#2D2D2D;
+    }
+    input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+      color:#2D2D2D;
+    }
+    input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+      color:#2D2D2D;
+    }
+    input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
+      color:#2D2D2D;
+    }
+  }
+  .van-button--normal {
+    width: 200px;
+    height: 60px;
+    line-height: 60px;
+    margin: 30px auto 0;
+    display: block;
+  }
+  .editor {
+    padding: 0 30px;
+    height: 600px;
+  }
+  .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button, .ql-snow .ql-color-picker, .ql-snow .ql-icon-picker {
+    width: 40px;
+    height: 40px;
+  }
+  .quill-editor {
+    width: 100%;
+    height: 100%;
+  }
+  .ql-container {
+    height: 90%;
+  }
+  .ql-snow .ql-tooltip[data-mode=link]::before {
+    content: "请输入链接地址:";
+  }
+  .ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+      border-right: 0px;
+      content: '保存';
+      padding-right: 0px;
+  }
+
+  .ql-snow .ql-tooltip[data-mode=video]::before {
+      content: "请输入视频地址:";
+  }
+
+  .ql-snow .ql-picker.ql-size .ql-picker-label::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item::before {
+    content: '14px';
+  }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value=small]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=small]::before {
+    content: '10px';
+  }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value=large]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=large]::before {
+    content: '18px';
+  }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value=huge]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=huge]::before {
+    content: '32px';
+  }
+
+  .ql-snow .ql-picker.ql-header .ql-picker-label::before,
+  .ql-snow .ql-picker.ql-header .ql-picker-item::before {
+    content: '文本';
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
+  .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+    content: '标题1';
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
+  .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+    content: '标题2';
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
+  .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
+    content: '标题3';
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="4"]::before,
+  .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
+    content: '标题4';
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="5"]::before,
+  .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="5"]::before {
+    content: '标题5';
+  }
+  .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="6"]::before,
+  .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
+    content: '标题6';
+  }
+
+  .ql-snow .ql-picker.ql-font .ql-picker-label::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item::before {
+    content: '标准字体';
+  }
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=serif]::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=serif]::before {
+    content: '衬线字体';
+  }
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=monospace]::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=monospace]::before {
+    content: '等宽字体';
+  }
+  .ql-align-center{
+    text-align: center;
+  }
+  .ql-align-right{
+    text-align: right;
+  }
+  .ql-align-left{
+    text-align: left;
+  }
+
+}

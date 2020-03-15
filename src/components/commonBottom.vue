@@ -25,7 +25,7 @@ export default {
           title: '农家帮'
         },
         {
-          meta: 'yj',
+          meta: 'travels',
           icon: require('@/assets/img/yj.png'),
           iconIndex: require('@/assets/img/yj_g.png'),
           title: '游记'
