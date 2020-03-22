@@ -157,4 +157,25 @@ export default[
       title: 'wode'
     }
   },
+  {
+    path: '/collect',
+    name: 'collect',
+    component: () => import('@/view/myCollection'),
+    meta: {
+      title: 'wode'
+    }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/view/login')
+  },
+  {
+    path: '/myyouji',
+    name: 'myyouji',
+    component: () => import('@/view/myYouji'),
+    meta: {
+      title: 'wode'
+    }
+  },
 ]
