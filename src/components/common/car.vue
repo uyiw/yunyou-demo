@@ -8,22 +8,22 @@
         <div class="car-list-box">
             <div class="car-item-box" v-for="(item,index) in carList" :key="index">
                 <div class="store-header">
-                    <img v-if="!item.isSelect" src="../../assets/img/noSelect.png" class="store-no-select">
-                    <img v-else class="store-select" src="../../assets/img/carSelect.png" />
+                    <img @click="handleSelectStore(true,item.id)" v-if="!item.isSelect" src="../../assets/img/noSelect.png" class="store-no-select">
+                    <img @click="handleSelectStore(false,item.id)" v-else class="store-select" src="../../assets/img/carSelect.png" />
                     <div class="store-name">{{item.storeName}}</div>
-                    <img class="store-delete" src="../../assets/img/close.png">
+                    <img @click="handleDeleteStore(item.id)" class="store-delete" src="../../assets/img/close.png">
                 </div>
                 <div class="shop-box">
                     <div class="shop-item-box" v-for="(item1,index1) in item.shoping" :key="index1">
-                        <img v-if="!item.isSelect" src="../../assets/img/noSelect.png" class="store-no-select">
-                        <img v-else class="store-select" src="../../assets/img/carSelect.png" />
+                        <img @click="handleSelectShoping(item.id,item1.id)" v-if="!item1.isSelect" src="../../assets/img/noSelect.png" class="store-no-select">
+                        <img @click="handleSelectShoping(item.id,item1.id)" v-else class="store-select" src="../../assets/img/carSelect.png" />
                         <img class="shop-img" :src="item1.img" />
                         <div class="shop-right">
                             <div class="shop-name">{{item1.name}}</div>
                             <div class="shop-guige">{{item1.guige}}</div>
                             <div class="shop-price-box">
                                 <div class="shop-price">￥{{item1.price.toFixed(2)}}</div>
-                                <van-stepper v-model="item1.count" />
+                                <van-stepper @change="sumAllSelect" v-model="item1.count" />
                             </div>
                         </div>
                     </div>
@@ -32,8 +32,8 @@
         </div>
         <div class="car-bottom">
             <div class="car-bottom-left">
-                <img v-if="allSelect" src="../../assets/img/noSelect.png" class="store-no-select">
-                <img v-else class="store-select" src="../../assets/img/carSelect.png" />
+                <img @click="haddleSelectAll(true)" v-if="!allSelect" src="../../assets/img/noSelect.png" class="store-no-select">
+                <img @click="haddleSelectAll(false)" v-else class="store-select" src="../../assets/img/carSelect.png" />
                 <div>全选</div>
             </div>
             <div class="car-bottom-center">
@@ -50,11 +50,13 @@ export default {
   data() {
     return {
         allSelect:false,
-        totalPrice:1000,
+        totalPrice:0,
         carList:[{
             storeName:'店名',
             isSelect:false,
+            id:1,
             shoping:[{
+                id:1,
                 img:require("../../assets/img/2.png"),
                 name:'商品名字',
                 guige:'规格',
@@ -62,6 +64,7 @@ export default {
                 count:1,
                 isSelect:false,
             },{
+                id:2,
                 img:require("../../assets/img/2.png"),
                 name:'商品名字',
                 guige:'规格',
@@ -71,7 +74,10 @@ export default {
             }]
         },{
             storeName:'店名',
+            isSelect:false,
+            id:2,
             shoping:[{
+                id:3,
                 img:require("../../assets/img/2.png"),
                 name:'商品名字',
                 guige:'规格',
@@ -81,7 +87,10 @@ export default {
             }]
         },{
             storeName:'店名',
+            isSelect:false,
+            id:3,
             shoping:[{
+                id:4,
                 img:require("../../assets/img/2.png"),
                 name:'商品名字',
                 guige:'规格',
@@ -93,7 +102,77 @@ export default {
     }
   },
   methods:{
-      
+      handleDeleteStore:function(id){
+          for(let i=0;i<this.carList.length;i++){
+              if(id==this.carList[i].id){
+                  this.carList.splice(i,1)
+              }
+          }
+          this.sumAllSelect()
+      },
+      handleSelectStore:function(select,id){
+          this.carList=this.carList.map(item=>{
+              if(item.id==id){
+                  item.isSelect=select;
+                  item.shoping.forEach(item1=>{
+                      item1.isSelect=select;
+                      return item1;
+                  })
+              }
+              return item;
+          })
+          this.sumAllSelect()
+      },
+      handleSelectShoping:function(id,shopId){
+          this.carList=this.carList.map(item=>{
+              if(item.id==id){
+                  item.shoping.forEach(item1=>{
+                      if(item1.id==shopId){
+                          console.log(item1.id,shopId)
+                          item1.isSelect=!item1.isSelect;
+                      }
+                      return item1;
+                  })
+                  let isAll=true;
+                  item.shoping.map(item1=>{
+                      if(!item1.isSelect){
+                          isAll=false;
+                      }
+                  })
+                  item.isSelect=isAll;
+              }
+              return item;
+          })
+          this.sumAllSelect()
+      },
+      sumAllSelect:function(){
+          let isAll=true;
+          let totalMoney=0;
+          this.carList.map(item=>{
+              if(!item.isSelect){
+                  isAll=false;
+              }
+              item.shoping.map(item1=>{
+                  if(item1.isSelect){
+                      totalMoney+=item1.count*parseFloat(item1.price);
+                  }
+                  
+              })
+          })
+          this.allSelect=isAll;
+          this.totalPrice=totalMoney;
+      },
+      haddleSelectAll:function(select){
+          this.carList=this.carList.map(item=>{
+              item.shoping.forEach(item1=>{
+                    item1.isSelect=select;
+                    return item1;
+              })
+              item.isSelect=select;
+              return item;
+          })
+          this.sumAllSelect()
+      }
   }
 }
 </script>
