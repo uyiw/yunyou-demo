@@ -27,7 +27,7 @@ export default {
           default:''
       },
       phone:{
-          type:Number,
+          type:String,
           default:''
       },
       toUrl:{
@@ -98,5 +98,5 @@ export default {
       }
     }
   }
-  
+
 </style>

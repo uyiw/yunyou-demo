@@ -157,4 +157,12 @@ export default[
       title: 'wode'
     }
   },
+  {
+    path: '/newsDetail',
+    name: 'newsDetail',
+    component: () => import('@/view/newsDetail'),
+    meta: {
+      title: 'index'
+    }
+  },
 ]

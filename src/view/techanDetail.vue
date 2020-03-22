@@ -5,12 +5,12 @@
     <div class="techan-detail-content">
         <detailNameBox :name="detailInfo.name"></detailNameBox>
         <pointTitle text="推荐购买地址"></pointTitle>
-        <addressPhone :location="detailInfo.location" :phone="detailInfo.phone" :toUrl="detailInfo.toUrl"></addressPhone>
+        <addressPhone :location="detailInfo.address" :phone="detailInfo.phone" :toUrl="detailInfo.toUrl"></addressPhone>
         <div class="techan-detail-point-box">
             <pointCard :content="detailInfo.detail.content" :text="detailInfo.detail.title"></pointCard>
         </div>
     </div>
-    <buy></buy>
+    <buy :show="show" :flag="flag"></buy>
   </div>
 </template>
 <script>
@@ -24,22 +24,13 @@ import buy from '../components/common/buy'
 export default {
   data() {
     return {
-      bannerList: [
-        require('@/assets/img/2.png'),
-        require('@/assets/img/banner1.png'),
-        require('@/assets/img/2.png')
-      ],
+      bannerList: [],
+      show: false,
       detailInfo:{
-          name:'精品银鱼干',
-          location:'西安市 沿江大道182号【沿江大道\江汉路汉口金融中心、武汉广场、中山公园】',
-          phone:13131344568,
-          toUrl:'',
-          detail:{
-              title:'详情介绍',
-              content:'2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，'
-          }
+        detail: {}
       },
-      navText:'详情'
+      navText:'详情',
+      flag: ''
     }
   },
   components: {
@@ -50,6 +41,17 @@ export default {
     pointCard,
     addressPhone,
     buy
+  },
+  mounted () {
+    this.$http.get(this.baseUrl + '/yunchao/specialty/details/' + this.$route.query.id).then(res => {
+      this.bannerList = res.data.localSpecialty.arrImgs;
+      this.detailInfo = res.data.localSpecialty;
+      this.detailInfo.detail = {
+        title:'详情介绍',
+        content: res.data.localSpecialty.info
+      }
+      this.flag = res.data.specialLocalProduct.flag
+    })
   }
 }
 </script>

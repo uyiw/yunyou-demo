@@ -1,21 +1,21 @@
 <template>
   <div id="shouye">
-    <commonHeader :bannerList="bannerList"></commonHeader>
+    <commonHeader :bannerList="bannerList" :areaId.sync="areaId" @update:areaId="areaId = $event" @searchClick="searchClick"></commonHeader>
     <div class="shouye-type">
-      <router-link tag="div" to="/scenicList"><img src="../assets/img/jingqu.png" />景区</router-link>
+      <router-link tag="div" to="/scenic"><img src="../assets/img/jingqu.png" />景区</router-link>
       <router-link tag="div" to="/xiangsu"><img src="../assets/img/xiangsu.png" />乡宿</router-link>
-      <router-link tag="div" to="/foodList"><img src="../assets/img/canyin.png" />餐饮</router-link>
+      <router-link tag="div" to="/food"><img src="../assets/img/canyin.png" />餐饮</router-link>
       <router-link tag="div" to="/techan"><img src="../assets/img/techan.png" />特产</router-link>
     </div>
     <div class="shouye-new clearfix">
       <div class="pull-left">云游头条</div>
       <img src="../assets/img/laba.png" class="pull-left" />
-      <div class="pull-left news-detail">{{ newsDetail }}</div>
+      <div class="pull-left news-detail">{{ newsDetail.title }}</div>
       <router-link tag="p" to="/newsList" class="pull-right">更多<img src="../assets/img/next.png" /></router-link>
     </div>
     <div class="shouye-banner">
       <swiper :options="swiperOption">
-        <swiper-slide v-for="(item, index) in bannerList1" :key="index">
+        <swiper-slide v-for="(item, index) in bannerList" :key="index">
           <img :src="item" @click="goToDetail(index)" />
         </swiper-slide>
       </swiper>
@@ -26,13 +26,13 @@
       </div>
       <div class="shouye-tab-list">
         <div class="clearfix" v-for="(item, index) in dataList" :key="index">
-          <img :src="item.img" class="pull-left" />
+          <img :src="baseUrl + item.imgs" class="pull-left" />
           <div class="pull-left">
-            <p>{{ item.title }}</p>
+            <p>{{ item.name }}</p>
             <p>推荐指数: <span><span>{{ item.score }}</span> 分</span></p>
             <p>有{{ item.num }}在此打卡</p>
           </div>
-          <router-link class="pull-right" tag="span" :to="'/scenicDetail?id='+index">查看<br />详情</router-link>
+          <router-link class="pull-right" tag="span" :to="'/scenicDetail?id='+item.id">查看<br />详情</router-link>
         </div>
       </div>
     </div>
@@ -45,12 +45,8 @@ import commonBottom from '../components/commonBottom'
 export default {
   data() {
     return {
-      bannerList: [
-        require('@/assets/img/2.png'),
-        require('@/assets/img/banner1.png'),
-        require('@/assets/img/2.png')
-      ],
-      newsDetail: '武清水雪嘉年华！',
+      bannerList: [],
+      newsDetail: {},
       bannerList1: [require('@/assets/img/3.png'),
         require('@/assets/img/banner1.png'),
         require('@/assets/img/3.png')
@@ -66,20 +62,23 @@ export default {
       },
       tabList: ['必打卡', '刷地标', '一日游', '两日游'],
       tabIndex: 0,
-      dataList: [
-        {
-          img: require('@/assets/img/4.png'),
-          title: '朱仙镇',
-          score: '5.0',
-          num: '999+'
-        },
-        {
-          img: require('@/assets/img/5.png'),
-          title: '朱仙镇',
-          score: '5.0',
-          num: '999+'
-        },
-      ]
+      dataList: [],
+      areaId: ''
+    }
+  },
+  watch: {
+    areaId: function(newVal, oldVal) {
+      if(newVal) {
+        this.$http.get(this.baseUrl + '/yunchao/scenic/search/1/10?areaId=' + this.areaId).then(res => {
+          if(res.data.data && res.data.data.length > 0) {
+            res.data.data.forEach(item => {
+                item.score = 5;
+                item.num = 999
+            });
+            this.dataList = res.data.data
+          }
+        })
+      }
     }
   },
   components: {
@@ -87,6 +86,15 @@ export default {
     commonBottom
   },
   created() {
+    this.$http.get(this.baseUrl + '/yunchao/index/rotation').then(res => {
+      if(res.data && res.data.length > 0) {
+        this.bannerList = res.data
+      }
+    })
+    this.$http.get(this.baseUrl + '/yunchao/headlines/search/1/1').then(res => {
+      this.newsDetail = res.data.data[0]
+    })
+
   },
   methods: {
     tabClick: function(index) {
@@ -94,8 +102,21 @@ export default {
     },
     goToDetail: function(index) {
       this.$router.push('/attractions')
+    },
+    searchClick: function(data) {
+      var url = data ? this.baseUrl + '/yunchao/scenic/search/1/10?areaId=' + this.areaId + '&queryStr=' + data : this.baseUrl + '/yunchao/scenic/search/1/10?areaId=' + this.areaId
+      this.$http.get(url).then(res => {
+        if(res.data.data && res.data.data.length > 0) {
+          res.data.data.forEach(item => {
+              item.score = 5;
+              item.num = 999
+          });
+          this.dataList = res.data.data
+        }
+      })
     }
   }
+
 }
 </script>
 <style lang="scss">

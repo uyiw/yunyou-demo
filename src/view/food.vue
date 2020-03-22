@@ -1,7 +1,7 @@
 <template>
   <div id="food">
     <commonNav :navText="navText"></commonNav>
-    <commonHeader :bannerList="bannerList" :height="true"></commonHeader>
+    <commonHeader :bannerList="bannerList" :height="true" :areaId.sync="areaId" @update:areaId="areaId = $event" @searchClick="searchClick"></commonHeader>
     <div class="food-tab clearfix">
       <router-link to="" tag="div" class="pull-left">
         <img src="../assets/img/21.png" />
@@ -23,7 +23,7 @@
         <selectTag v-for="(item,index) in selectTag" :key="index" :isFirst="index==0" :items="item.items" :text="item.text"></selectTag>
       </div>
       <div class="food-list">
-        <foodList :tab="tab"></foodList>
+        <foodList :tab="tab" :areaId="areaId" :value="value"></foodList>
       </div>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
@@ -39,18 +39,27 @@ export default {
   data() {
     return {
       navText: '餐饮',
-      bannerList: [require('@/assets/img/3.png'),
-        require('@/assets/img/banner1.png'),
-        require('@/assets/img/3.png')
-      ],
+      bannerList: [],
       selectTag:[{
         text:'全部景区',
         items:[]
       },{
         text:'推荐排序',
-        items:[]
+        items:[
+          {
+            scenicName: '最新',
+            areaCode: '1'
+          },
+          {
+            scenicName: '最热',
+            areaCode: '2'
+          },
+        ]
       }],
       tab: 0,
+      areaId: '',
+      value: '',
+      scenicSpotAreaId: ''
     }
 
   },
@@ -60,7 +69,28 @@ export default {
     commonBottom,
     selectTag,
     foodList
-  }
+  },
+  watch: {
+    areaId: function(newVal, oldVal) {
+      if(newVal) {
+        this.$http.get(this.baseUrl + '/yunchao/scenic/location/' + this.areaId).then(res => {
+          if(res.data.data && res.data.data.length > 0) {
+            this.selectTag[0].items = res.data.data
+          }
+        })
+      }
+    }
+  },
+  mounted() {
+    this.$http.get(this.baseUrl + '/yunchao/food/rotation').then(res => {
+      this.bannerList = res.data
+    })
+  },
+  methods: {
+    searchClick: function(data) {
+      this.value = data
+    },
+  },
 }
 </script>
 <style lang="scss">
