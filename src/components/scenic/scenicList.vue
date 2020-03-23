@@ -1,11 +1,18 @@
 <template>
   <div class="scenicList">
-    <div v-for="(item, index) in scenicList" :key="index" @click="goToDetail(item.id, item.area)">
-      <img :src="baseUrl + item.imgs" />
-      <h3>{{ item.name }}</h3>
-      <p><img src="../../assets/img/16.png" /> {{ item.address }}</p>
-      <div class="scenicList-con">{{ item.info }}</div>
-    </div>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <div v-for="(item, index) in scenicList" class="scenicItem" :key="index" @click="goToDetail(item.id, item.area)">
+        <img :src="baseUrl + item.imgs" />
+        <h3>{{ item.name }}</h3>
+        <p><img src="../../assets/img/16.png" /> {{ item.address }}</p>
+        <div class="scenicList-con">{{ item.info }}</div>
+      </div>
+    </van-list>
   </div>
 </template>
 <script>
@@ -15,72 +22,66 @@ export default {
     return {
       scenicList: [],
       scenicSpotAreaId: '',
-      order: ''
+      order: '',
+      loading: false,
+      finished: false,
+      page: 1,
+      totalNum: 10
     }
   },
   watch: {
     areaId: function(newVal, oldVal) {
       if(newVal) {
-        this.scenicList = [];
         this.scenicSpotAreaId = ''
-        var url = '/yunchao/scenic/search/1/10?areaId=' + newVal + '&queryStr=' + this.value  + '&order=' + this.order;
-        this.$http.get(this.baseUrl + url).then(res => {
-          if(res.data.data && res.data.data.length > 0) {
-            this.scenicList = res.data.data
-          }
-        })
+        this.page = 1;
+        this.getData();
       }
     },
     value: function(newVal, oldVal) {
-      this.scenicList = [];
-      var url = this.scenicSpotAreaId ? this.baseUrl + '/yunchao/scenic/search/1/10?scenicSpotAreaId=' + this.scenicSpotAreaId + '&queryStr=' + newVal  + '&order=' + this.order : this.baseUrl + '/yunchao/scenic/search/1/10?areaId=' + this.areaId + '&queryStr=' + newVal  + '&order=' + this.order;
-      this.$http.get(url).then(res => {
-        if(res.data.data && res.data.data.length > 0) {
-          this.scenicList = res.data.data
-        }
-      })
+      this.page = 1;
+      this.getData();
     },
   },
   mounted () {
     this.$parent.$on('changeAreaId', (data) => {
-      this.scenicSpotAreaId = data;
-      this.scenicList = [];
-      var url = this.baseUrl + '/yunchao/scenic/search/1/10?scenicSpotAreaId=' + data + '&queryStr=' + this.value + '&order=' + this.order;
-      this.$http.get(url).then(res => {
-        if(res.data.data && res.data.data.length > 0) {
-          this.scenicList = res.data.data
-        }
-      })
+      this.page = 1;
+      this.getData();
     })
     this.$parent.$on('changePai', (data) => {
+      this.page = 1;
       this.order = data;
-      this.scenicList = [];
-      var url = ''
-      if(this.scenicSpotAreaId) {
-        url = this.baseUrl + '/yunchao/scenic/search/1/10?scenicSpotAreaId=' + this.scenicSpotAreaId + '&queryStr=' + this.value + '&order=' + data;
-      }else {
-        url = this.baseUrl + '/yunchao/scenic/search/1/10?scenicSpotAreaId=' + this.areaId + '&queryStr=' + this.value + '&order=' + data;
-      }
-
-      this.$http.get(url).then(res => {
-        if(res.data.data && res.data.data.length > 0) {
-          this.scenicList = res.data.data
-        }
-      })
+      this.getData();
     })
     if(this.$route.query.areaId) {
-      this.scenicList = [];
-      var url = this.baseUrl + '/yunchao/scenic/search/1/10?areaId=' + this.$route.query.areaId;
-      this.$http.get(url).then(res => {
-        if(res.data.data && res.data.data.length > 0) {
-          this.scenicList = res.data.data
-        }
-      })
+      this.getData();
     }
   },
   methods: {
     goToDetail: function(index, area) {
       this.$router.push('/attractions?id=' + index + '&areaId=' + area)
+    },
+    getData() {
+      if(this.page <= 1)this.scenicList = [];
+      var url = '';
+      if(this.scenicSpotAreaId) {
+        url = this.baseUrl + '/yunchao/scenic/search/'+ this.page + '/10?scenicSpotAreaId=' + this.scenicSpotAreaId + '&queryStr=' + this.value + '&order=' + this.order;
+      }else {
+        url = this.baseUrl + '/yunchao/scenic/search/'+ this.page + '/10?areaId=' + this.areaId + '&queryStr=' + this.value + '&order=' + this.order;
+      }
+      this.$http.get(url).then(res => {
+        if(res.data.data && res.data.data.length > 0) {
+
+          this.scenicList.concat(res.data.data)
+          this.loading = false;
+        }
+        if(this.totalNum <= res.data.data.length) {
+          this.finished = true;
+        }
+      })
+    },
+    onLoad() {
+      this.page += 1;
+      this.getData();
     }
   }
 }
