@@ -51,10 +51,10 @@ export default {
       this.detailInfo.address = res.data.jqArea.fullName
       this.detailInfo.detail = [{
           title:'详情介绍',
-          content:res.data.info
+          content: res.data.info ? res.data.info : '无'
       },{
           title:'接待能力',
-          content:'无'
+          content:res.data.reception ? res.data.reception : '无'
       }]
     })
   }

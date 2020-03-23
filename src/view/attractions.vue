@@ -13,7 +13,7 @@
       <div class="attractions-content-intro clearfix">
         <p>介绍</p>
         <div v-html="attractions.introduction"></div>
-        <router-link tag="span" :to="'/scenicDetail/?id=' + $route.query.id + '&areaId=' + $route.query.areaId" class="pull-right">详情<img src="../assets/img/right.png" /></router-link>
+        <router-link tag="span" to="" class="pull-right">详情<img src="../assets/img/right.png" /></router-link>
       </div>
       <div class="attractions-content-other">
         <p>地址：{{ attractions.address }}</p>

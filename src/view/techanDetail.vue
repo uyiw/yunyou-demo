@@ -3,14 +3,14 @@
     <commonNav :navText="navText"></commonNav>
     <commonSwiper :bannerList="bannerList"></commonSwiper>
     <div class="techan-detail-content">
-        <detailNameBox :name="detailInfo.name"></detailNameBox>
+        <detailNameBox :name="specialLocalProduct.name"></detailNameBox>
         <pointTitle text="推荐购买地址"></pointTitle>
         <addressPhone :location="detailInfo.address" :phone="detailInfo.phone" :toUrl="detailInfo.toUrl"></addressPhone>
         <div class="techan-detail-point-box">
-            <pointCard :content="detailInfo.detail.content" :text="detailInfo.detail.title"></pointCard>
+          <pointCard :content="detailInfo.detail.content" :text="detailInfo.detail.title"></pointCard>
         </div>
     </div>
-    <buy :show="show" :flag="flag"></buy>
+    <buy :show="show" :flag="flag" @clickCar="clickCar"></buy>
   </div>
 </template>
 <script>
@@ -27,10 +27,11 @@ export default {
       bannerList: [],
       show: false,
       detailInfo:{
-        detail: {}
+        detail: {},
       },
       navText:'详情',
-      flag: ''
+      flag: '',
+      specialLocalProduct: {}
     }
   },
   components: {
@@ -50,8 +51,18 @@ export default {
         title:'详情介绍',
         content: res.data.localSpecialty.info
       }
+      this.specialLocalProduct = res.data.specialLocalProduct
       this.flag = res.data.specialLocalProduct.flag
     })
+  },
+  methods: {
+    clickCar: function() {
+      this.$http.post(this.baseUrl + '/yunchao/cart/add?specialtyId=' + this.$route.query.id).then(res => {
+        if(res.data.message == '用户没有登录') {
+          this.$router.push('/login')
+        }
+      })
+    }
   }
 }
 </script>

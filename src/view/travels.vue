@@ -17,18 +17,25 @@
       <span :class="{'choose': item.id === tabIndex}" @click="tabClick(item.id)" v-for="(item, index) in tabList" :key="index">{{ item.name }}</span>
     </div>
     <div class="travels-list">
-      <div class="travels-list-con" v-for="(item, index) in travelsList" :key="index" @click="goToDetail(item.id)">
-        <div class="travels-list-con-top clearfix">
-          <img :src="item.jqCustomer ? item.jqCustomer.img : ''" class="pull-left" />
-          <div class="pull-left">
-            <p>{{ item.jqCustomer ? item.jqCustomer.nickname : '' }}</p>
-            <p>{{ item.createDateStr }}出游</p>
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <div class="travels-list-con" v-for="(item, index) in travelsList" :key="index" @click="goToDetail(item.id)">
+          <div class="travels-list-con-top clearfix">
+            <img :src="item.jqCustomer ? item.jqCustomer.img : ''" class="pull-left" />
+            <div class="pull-left">
+              <p>{{ item.jqCustomer ? item.jqCustomer.nickname : '' }}</p>
+              <p>{{ item.createDateStr }}出游</p>
+            </div>
+            <div @click.stop="goToEdit" class="pull-right addNew">新增<van-icon name="plus" /></div>
           </div>
-          <div @click.stop="goToEdit" class="pull-right addNew">新增<van-icon name="plus" /></div>
+          <img :src="item.url" />
+          <p>{{ item.info }}</p>
         </div>
-        <img :src="baseUrl + item.url" />
-        <p>{{ item.info }}</p>
-      </div>
+      </van-list>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
   </div>
@@ -41,17 +48,17 @@ export default {
   data() {
     return {
       navText: '游记',
-      bannerList: [
-        require('@/assets/img/2.png'),
-        require('@/assets/img/banner1.png'),
-        require('@/assets/img/2.png')
-      ],
+      bannerList: [],
       value: '',
-      city: '西安',
+      city: '',
       showArea: false,
       longitude:0,//经度
       latitude:0,//纬度
       areaId: '',
+      loading: false,
+      finished: false,
+      page: 0,
+      totalNum: 10,
       areaList: {
         province_list: {}
       },
@@ -75,7 +82,8 @@ export default {
         },
       ],
       tabIndex: 3,
-      travelsList: []
+      travelsList: [],
+      page: 0,
     }
   },
   components: {
@@ -95,27 +103,38 @@ export default {
         this.getMyLocation();
       }
     }
+    this.$http.get(this.baseUrl + '/yunchao/travels/rotation').then(res => {
+      if(res.data && res.data.length > 0) {
+        this.bannerList = res.data
+      }
+    })
   },
   methods: {
     getData: function() {
       var url = '';
-      this.travelsList = [];
+      if(this.page <= 1)this.travelsList = [];
       if(this.tabIndex == 'isMy') {
-        url = this.baseUrl + '/yunchao/travels/search/1/10?areaId=' + this.areaId + '&isMy=1&queryStr=' + this.value
+        url = this.baseUrl + '/yunchao/travels/search/' + this.page  + '/10?areaId=' + this.areaId + '&isMy=1&queryStr=' + this.value
       }else {
-        url = this.baseUrl + '/yunchao/travels/search/1/10?areaId=' + this.areaId  + '&order=' + this.tabIndex + '&queryStr=' + this.value
+        url = this.baseUrl + '/yunchao/travels/search/' + this.page  + '/10?areaId=' + this.areaId  + '&order=' + this.tabIndex + '&queryStr=' + this.value
       }
       this.$http.get(url).then(res => {
-        if(res.data.data && res.data.data.length > 0) {
-          res.data.data.forEach(item => {
+        if(res.data.data.result && res.data.data.result.length > 0) {
+          res.data.data.result.forEach(item => {
             item.url = item.arrImgs[0]
+            this.travelsList.push(item)
           })
-          this.travelsList = res.data.data
+          this.loading = false;
+          this.totalNum = res.data.data.pagination.totalCount;
+          if(this.travelsList.length >= this.totalNum) {
+            this.finished = true;
+          }
         }
       })
     },
     tabClick: function(id) {
       this.tabIndex = id;
+      this.page = 1;
       this.getData();
     },
     goToDetail: function(index) {
@@ -131,6 +150,7 @@ export default {
       this.city = data[0].name
       this.close = true
       this.areaId = data[0].code;
+      this.page = 1;
       this.getData();
       var data = {
         areaId: data[0].code,
@@ -157,6 +177,7 @@ export default {
             }
           });
         }
+        this.page = 1;
         this.getData();
       })
     },
@@ -172,14 +193,22 @@ export default {
     },
     valueSearch: function(value) {
       this.value = value;
+      this.page =1;
       this.getData();
     },
     cancelSearch: function(value) {
       if(!value) {
         this.value = value;
+        this.page =1;
         this.getData();
       }
     },
+    onLoad() {
+      this.page += 1;
+      if(this.page >= 1 && this.areaId) {
+        this.getData();
+      }
+    }
   }
 }
 </script>

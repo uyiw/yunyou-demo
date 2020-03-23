@@ -23,10 +23,19 @@ export default {
       navText: '人气美食',
       selectTag:[{
         text:'全部景区',
-        items:[]
+        items: []
       },{
         text:'推荐排序',
-        items:[]
+        items: [
+          {
+            scenicName: '最新',
+            areaCode: '1'
+          },
+          {
+            scenicName: '最热',
+            areaCode: '2'
+          },
+        ]
       }],
       tab: 0
     }

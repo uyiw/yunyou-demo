@@ -45,7 +45,7 @@
     padding: 0 30px;
     .food-list {
       #foodList {
-        & > div {
+        .foodItem {
           padding: 10px 0;
           border-bottom: 1px solid #eee;
           & > img {

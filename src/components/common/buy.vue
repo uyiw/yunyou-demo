@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="buy-right">
-            <div class="add-car">加入购物车</div>
+            <div class="add-car" @click="addCar">加入购物车</div>
             <div class="buy-now">立即购买</div>
         </div>
     </div>
@@ -44,6 +44,11 @@ export default {
   },
   components:{
     car,
+  },
+  methods: {
+    addCar() {
+      this.$emit('clickCar', 1)
+    }
   }
 }
 </script>

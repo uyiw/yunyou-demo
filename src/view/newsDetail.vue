@@ -41,9 +41,7 @@ export default {
       color:rgba(84,84,84,1);
       line-height:56px;
       margin-bottom: 20px;
-      & > span {
-        margin-left: 20px;
-      }
+      padding-left: 20px;
     }
     & > p {
       margin-bottom: 20px;

@@ -6,9 +6,16 @@
       <div class="xiangsu-select-box">
         <selectTag v-for="(item,index) in selectTag" :key="index" :isFirst="index==0" :items="item.items" :text="item.text"></selectTag>
       </div>
-      <div class="xiangsu-list-box">
-        <hotelCard v-for="(item,index) in hotelList" :key="index" :hotelItem="item" :isEnd="index==0"></hotelCard>
-      </div>
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <div class="xiangsu-list-box">
+          <hotelCard v-for="(item,index) in hotelList" :key="index" :hotelItem="item" :isEnd="index==0"></hotelCard>
+        </div>
+      </van-list>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
   </div>
@@ -41,10 +48,14 @@ export default {
         ]
       }],
       hotelList:[],
+      loading: false,
+      finished: false,
+      page: 0,
+      totalNum: 10,
       areaId: '',
       order: '',
       value: '',
-      scenicSpotAreaId: ''
+      scenicSpotId: ''
     }
   },
   watch: {
@@ -55,21 +66,11 @@ export default {
             this.selectTag[0].items = res.data.data
           }
         })
-        this.hotelList = [];
-        this.scenicSpotAreaId = ''
-        var url = this.value ? '/yunchao/food/search/1/10?areaId=' + newVal + '&queryStr=' + this.value + '&order=' + this.order : '/yunchao/food/search/1/10?areaId=' + newVal + '&order=' + this.order;
-        this.$http.get(this.baseUrl + url).then(res => {
-          if(res.data.data && res.data.data.length > 0) {
-            res.data.data.forEach(element => {
-              element.imgUrl = element.arrImgs[0]
-            });
-            res.data.data.forEach(item => {
-              item.star = 5
-              item.dis = '距您直线距离4公里靠近江边'
-            })
-            this.hotelList = res.data.data
-          }
-        })
+        if(oldVal) {
+          this.scenicSpotId = ''
+          this.page = 0;
+          this.getData();
+        }
       }
     },
   },
@@ -88,66 +89,53 @@ export default {
       this.areaId = JSON.parse(localStorage.getItem('area')).areaId
     }
     this.$on('changeAreaId', (data) => {
-      this.scenicSpotAreaId = data;
-      this.hotelList = [];
-      var url = this.baseUrl + '/yunchao/rural/search/1/10?scenicSpotAreaId=' + data + '&queryStr=' + this.value + '&order=' + this.order;
-      this.$http.get(url).then(res => {
-        if(res.data.data && res.data.data.length > 0) {
-          res.data.data.forEach(element => {
-            element.imgUrl = element.arrImgs[0]
-          });
-          res.data.data.forEach(item => {
-            item.star = 5
-            item.dis = '距您直线距离4公里靠近江边'
-          })
-          this.hotelList = res.data.data
-        }
-      })
+      this.scenicSpotId = data;
+      this.page = 0;
+      this.getData();
     })
     this.$on('changePai', (data) => {
       this.order = data;
-      this.hotelList = [];
-      var url = ''
-      if(this.scenicSpotAreaId) {
-        url = this.baseUrl + '/yunchao/rural/search/1/10?scenicSpotAreaId=' + this.scenicSpotAreaId + '&queryStr=' + this.value + '&order=' + data;
-      }else {
-        url = this.baseUrl + '/yunchao/rural/search/1/10?scenicSpotAreaId=' + this.areaId + '&queryStr=' + this.value + '&order=' + data;
-      }
-
-      this.$http.get(url).then(res => {
-        if(res.data.data && res.data.data.length > 0) {
-          res.data.data.forEach(element => {
-            element.imgUrl = element.arrImgs[0]
-          });
-          res.data.data.forEach(item => {
-            item.star = 5
-            item.dis = '距您直线距离4公里靠近江边'
-          })
-          this.hotelList = res.data.data
-        }
-      })
+      this.page = 0;
+      this.getData();
     })
   },
   methods: {
     searchClick: function(data) {
       this.value = data
-      this.hotelList = [];
-      var url = this.scenicSpotAreaId ?
-      (this.value ? this.baseUrl + '/yunchao/rural/search/1/10?scenicSpotAreaId=' + this.scenicSpotAreaId + '&queryStr=' + this.value + '&order=' + this.order : this.baseUrl + '/yunchao/food/search/1/10?scenicSpotAreaId=' + this.scenicSpotAreaId + '&order=' + this.order) :
-      (this.value ? this.baseUrl + '/yunchao/rural/search/1/10?areaId=' + this.areaId + '&queryStr=' + this.value + '&order=' + this.order : this.baseUrl + '/yunchao/scenic/search/1/10?areaId=' + this.areaId + '&order=' + this.order);
+      this.page = 0;
+      this.getData();
+    },
+    onLoad() {
+      this.page += 1;
+      if(this.page >= 1) {
+        this.getData();
+      }
+    },
+    getData: function() {
+      if(this.page <= 1) this.hotelList = [];
+      var url = ''
+      if(this.scenicSpotId) {
+        url = this.baseUrl + '/yunchao/rural/search/'+ this.page +'/10?scenicSpotId=' + this.scenicSpotId + '&queryStr=' + this.value + '&order=' + this.order;
+      }else {
+        url = this.baseUrl + '/yunchao/rural/search/'+ this.page +'/10?areaId=' + this.areaId + '&queryStr=' + this.value + '&order=' + this.order;
+      }
+
       this.$http.get(url).then(res => {
-        if(res.data.data && res.data.data.length > 0) {
-          res.data.data.forEach(element => {
-            element.imgUrl = element.arrImgs[0]
+        if(res.data.data.result && res.data.data.result.length > 0) {
+          res.data.data.result.forEach(item => {
+            item.imgUrl = item.arrImgs[0];
+            item.dis = '距您直线距离4公里靠近江边';
+            item.score = item.score ? parseInt(item.score) : 0
+            this.hotelList.push(item)
           });
-          res.data.data.forEach(item => {
-            item.star = 5
-            item.dis = '距您直线距离4公里靠近江边'
-          })
-          this.hotelList = res.data.data
+          this.totalNum = res.data.data.pagination.totalCount
+          this.loading = false;
+          if(this.hotelList.length >= this.totalNum) {
+            this.finished = true;
+          }
         }
       })
-    },
+    }
   },
 }
 </script>

@@ -1,17 +1,17 @@
 <template>
   <div class="common-hotel-item" :style="isEnd?{bodderBottom:'none'}:{}" @click="goToDetail(hotelItem.id)">
-    <img :src="baseUrl + hotelItem.img" class="common-hotel-item-img"/>
+    <img :src="hotelItem.img" class="common-hotel-item-img"/>
     <div class="common-hotel-item-right">
         <div class="common-hotel-item-right-name">{{hotelItem.name}}</div>
         <div class="common-hotel-item-right-star">
             <div class="common-hotel-item-right-star-title">评分:</div>
             <van-rate
-                v-model="hotelItem.star"
+                v-model="hotelItem.score"
                 allow-half
                 void-icon="star"
                 void-color="#eee"
             />
-            <div class="common-hotel-item-right-star-number"><span>{{hotelItem.star.toFixed(1)}}</span>分</div>
+            <div class="common-hotel-item-right-star-number"><span>{{ hotelItem.score }}</span>分</div>
         </div>
         <div class="common-hotel-item-right-dis">{{hotelItem.dis}}</div>
     </div>

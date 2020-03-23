@@ -2,7 +2,7 @@
   <div :class="height ? 'common-header changeHeight' : 'common-header'">
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="(item, index) in bannerList" :key="index">
-        <img :src="baseUrl + item.imgs">
+        <img :src="item.imgs">
       </van-swipe-item>
     </van-swipe>
     <div class="shouye-top-sea clearfix">
@@ -94,6 +94,7 @@ export default {
       this.city = data[0].name
       this.close = true
       this.$emit('update:areaId', data[0].code)
+      this.$emit('areaIdChange',  data[0].code)
     },
     closeBtn: function() {
       if(this.close) {

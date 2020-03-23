@@ -27,7 +27,7 @@ export default {
   mounted() {
     this.$http.get(this.baseUrl + '/yunchao/headlines/search/1/10').then(res => {
       if(res.data.data && res.data.data.length > 0) {
-        this.newsList = res.data.data
+        this.newsList = res.data.data[0]
       }
     })
   },

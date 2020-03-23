@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       tab: 0,
-      navText: '景区',
+      navText: '景点',
       selectTag:[{
         text:'全部景区',
         items:[]
@@ -30,11 +30,11 @@ export default {
         items: [
           {
             scenicName: '最新',
-            areaCode: ''
+            areaCode: 1
           },
           {
             scenicName: '最热',
-            areaCode: ''
+            areaCode: 2
           },
         ]
       }],

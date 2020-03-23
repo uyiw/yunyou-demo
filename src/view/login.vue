@@ -14,7 +14,8 @@
             <input class="code-input" v-model="code" />
             <div class="code-text">请输入验证码</div>
         </div>
-        <div class="sendCodeButton">发送验证码</div>
+        <div v-if="!send" class="sendCodeButton" @click="sendCode()">发送验证码</div>
+        <div v-if="send" class="sendCodeButton" @click="loginClick()">登录</div>
         <div class="des des1">点击按钮即表示你同意并遵守</div>
         <div class="des">《使用协议》和《隐私协议》</div>
         <div class="wx-login">
@@ -25,6 +26,7 @@
   </div>
 </template>
 <script>
+import { Toast } from 'vant';
 import commonBottom from '../components/commonBottom'
 import commonNav from '../components/commonNav'
 export default {
@@ -36,14 +38,45 @@ export default {
       code:'',
       option:[
         { text: '+86', value: 1 },
-        { text: '+87', value: 2 },
-     ]
+        // { text: '+87', value: 2 },
+      ],
+      send: 0
     }
   },
   methods:{
   },
   components: {
     commonNav,
+  },
+  methods: {
+    check: function() {
+      var check = true;
+      if(!this.phone) {
+        Toast.fail('请输入手机号码 ');
+        check = false
+        return check;
+      }
+      if(!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(this.phone))){
+        Toast.fail('手机号码有误，请重新输入');
+        check = false
+        return check;
+      }
+      return check;
+    },
+    sendCode: function() {
+      if(!this.check()) return
+      this.$http.get(this.baseUrl + '/yunchao/user/getVerifyCode?phone=' + this.phone).then(res => {})
+      this.send = 1;
+    },
+    loginClick: function() {
+      if(!this.check()) return
+      if(!this.code) {
+        return Toast.fail('请输入验证码');
+      }
+      this.$http.get(this.baseUrl + '/yunchao/user/login/code?code='+ this.code +'&phone=' + this.phone).then(res => {
+        console.log(res)
+      })
+    }
   }
 }
 </script>
@@ -194,6 +227,17 @@ export default {
             margin-top:20px;
           }
       }
+  }
+  .van-toast {
+    width: 50%;
+    font-size: 28px;
+    line-height: 34px;
+    .van-icon-fail {
+      display: none;
+    }
+    .van-toast__text {
+      margin-top: 0;
+    }
   }
 
 </style>

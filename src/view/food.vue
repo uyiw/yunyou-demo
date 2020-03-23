@@ -59,7 +59,8 @@ export default {
       tab: 0,
       areaId: '',
       value: '',
-      scenicSpotAreaId: ''
+      scenicSpotAreaId: '',
+      order: ''
     }
 
   },
@@ -90,6 +91,12 @@ export default {
     searchClick: function(data) {
       this.value = data
     },
+    changeAreaId: function(data) {
+      this.scenicSpotAreaId = data;
+    },
+    changePai: function(data) {
+      this.order = data;
+    }
   },
 }
 </script>

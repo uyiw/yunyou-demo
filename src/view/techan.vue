@@ -7,13 +7,20 @@
         <div v-for="(item,index) in selectTag" :key="index" :class="item.id == activeId?'active':''" @click="handleChangeTab(item.id)">{{item.text}}</div>
       </div>
       <div class="techan-list-box">
-        <div class="techan-item" v-for="(item,index) in techanList" :key="index" @click="goToDetail(item.id)">
-          <img class="techan-item-img" :src="baseUrl + item.imageUrls">
-          <div class="techan-item-name-box">
-            <div>{{item.name}}</div>
-            <img :src="item.flag ? require('@/assets/img/like.png') : require('@/assets/img/noLike.png')" />
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <div class="techan-item" v-for="(item,index) in techanList" :key="index" @click="goToDetail(item.id)">
+            <img class="techan-item-img" :src="item.imageUrls">
+            <div class="techan-item-name-box">
+              <div>{{item.name}}</div>
+              <img :src="item.flag ? require('@/assets/img/like.png') : require('@/assets/img/noLike.png')" />
+            </div>
           </div>
-        </div>
+        </van-list>
       </div>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
@@ -26,11 +33,7 @@ import commonBottom from '../components/commonBottom'
 export default {
   data() {
     return {
-      bannerList: [
-        require('@/assets/img/2.png'),
-        require('@/assets/img/banner1.png'),
-        require('@/assets/img/2.png')
-      ],
+      bannerList: [],
       activeId:1,
       areaId: '',
       navText:'特产',
@@ -48,33 +51,45 @@ export default {
         text:'工艺品',
         id: 4,
       }],
-      techanList:[]
+      techanList:[],
+      loading: false,
+      finished: false,
+      page: 0,
+      totalNum: 10,
     }
   },
   watch: {
     areaId: function(newVal, oldVal) {
-      if(newVal) {
+      if(newVal && oldVal) {
+        this.page = 1;
         this.getData();
       }
     }
   },
   mounted() {
     this.$http.get(this.baseUrl + '/yunchao/specialty/rotation').then(res => {
-      this.bannerList = res.data
+      if(res.data && res.data.length > 0) {
+        this.bannerList = res.data
+      }
     })
-    // this.$http.get(this.baseUrl + '/yunchao/specialty/rotation').then(res => {
-    //   this.bannerList = res.data
-    // })
   },
   methods:{
     handleChangeTab:function(id){
-      id!=this.activeId?this.activeId=id:'';
+       id != this.activeId ? this.activeId = id : '';
+       this.page = 1;
        this.getData();
     },
     getData: function() {
-      this.$http.get(this.baseUrl + '/yunchao/specialty/search/1/10?areaId='+ this.areaId +'&type=' + this.activeId + '&queryStr=' + this.value).then(res => {
-        if(res.data.data && res.data.data.length > 0) {
-          this.techanList = res.data.data
+      if(this.page <= 1) this.techanList = []
+      this.$http.get(this.baseUrl + '/yunchao/specialty/search/'+ this.page +'/10?areaId='+ this.areaId +'&type=' + this.activeId + '&queryStr=' + this.value).then(res => {
+        if(res.data.data[0] && res.data.data[0].length > 0) {
+          res.data.data[0].forEach(item => {
+            this.techanList.push(item)
+          })
+          this.totalNum = res.data.data[1]
+          if(this.totalNum <= this.techanList.length) {
+            this.finished = true;
+          }
         }else {
           this.techanList = []
         }
@@ -82,10 +97,17 @@ export default {
     },
     searchClick: function(data) {
       this.value = data
+      this.page = 1;
       this.getData();
     },
     goToDetail: function(index) {
       this.$router.push('/techanDetail?id=' + index)
+    },
+    onLoad() {
+      this.page += 1;
+      if(this.page >= 1) {
+        this.getData();
+      }
     }
   },
   components: {
