@@ -1,32 +1,87 @@
 <template>
   <div class="scenicList">
-    <div v-for="(item, index) in scenicList" :key="index">
-      <img :src="item.url" />
-      <h3>{{ item.title }}</h3>
-      <p><img src="../../assets/img/16.png" /> {{ item.address }}</p>
-      <div class="scenicList-con">{{ item.content }}</div>
-    </div>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <div v-for="(item, index) in scenicList" class="scenicItem" :key="index" @click="goToDetail(item.id, item.area)">
+        <img :src="baseUrl + item.imgs" />
+        <h3>{{ item.name }}</h3>
+        <p><img src="../../assets/img/16.png" /> {{ item.address }}</p>
+        <div class="scenicList-con">{{ item.info }}</div>
+      </div>
+    </van-list>
   </div>
 </template>
 <script>
 export default {
-  props: ['tab'],
+  props: ['tab', 'areaId', 'value'],
   data() {
     return {
-      scenicList: [
-        {
-          url: require('@/assets/img/34.png'),
-          title: '三瓜公社',
-          address: '合肥巢湖半塘街道三瓜公社',
-          content: '人民网巢湖4月18日电 (记者 张磊)“真的很想在这里安心住下来，体验一回地道的农民。”在安徽巢湖“三瓜公社”，来自北京的韩旭娇逛了冬瓜民俗村，品了村口农家乐，赏了漫山郁金香，临别时还是对这儿的田园农'
-        },
-        {
-          url: require('@/assets/img/34.png'),
-          title: '三瓜公社',
-          address: '合肥巢湖半塘街道三瓜公社',
-          content: '人民网巢湖4月18日电 (记者 张磊)“真的很想在这里安心住下来，体验一回地道的农民。”在安徽巢湖“三瓜公社”，来自北京的韩旭娇逛了冬瓜民俗村，品了村口农家乐，赏了漫山郁金香，临别时还是对这儿的田园农'
-        },
-      ]
+      scenicList: [],
+      scenicSpotAreaId: '',
+      order: '',
+      loading: false,
+      finished: false,
+      page: 1,
+      totalNum: 10
+    }
+  },
+  watch: {
+    areaId: function(newVal, oldVal) {
+      if(newVal) {
+        this.scenicSpotAreaId = ''
+        this.page = 1;
+        this.getData();
+      }
+    },
+    value: function(newVal, oldVal) {
+      this.page = 1;
+      this.getData();
+    },
+  },
+  mounted () {
+    this.$parent.$on('changeAreaId', (data) => {
+      this.page = 1;
+      this.getData();
+    })
+    this.$parent.$on('changePai', (data) => {
+      this.page = 1;
+      this.order = data;
+      this.getData();
+    })
+    if(this.$route.query.areaId) {
+      this.getData();
+    }
+  },
+  methods: {
+    goToDetail: function(index, area) {
+      this.$router.push('/attractions?id=' + index + '&areaId=' + area)
+    },
+    getData() {
+      if(this.page <= 1)this.scenicList = [];
+      var url = '';
+      if(this.scenicSpotAreaId) {
+        url = this.baseUrl + '/yunchao/scenic/search/'+ this.page + '/10?scenicSpotAreaId=' + this.scenicSpotAreaId + '&queryStr=' + this.value + '&order=' + this.order;
+      }else {
+        url = this.baseUrl + '/yunchao/scenic/search/'+ this.page + '/10?areaId=' + this.areaId + '&queryStr=' + this.value + '&order=' + this.order;
+      }
+      this.$http.get(url).then(res => {
+        if(res.data.data && res.data.data.length > 0) {
+
+          this.scenicList.concat(res.data.data)
+          this.loading = false;
+        }
+        if(this.totalNum <= res.data.data.length) {
+          this.finished = true;
+        }
+      })
+    },
+    onLoad() {
+      this.page += 1;
+      this.getData();
     }
   }
 }

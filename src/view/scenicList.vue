@@ -6,7 +6,7 @@
         <selectTag v-for="(item,index) in selectTag" :key="index" :isFirst="index==0" :items="item.items" :text="item.text"></selectTag>
       </div>
       <div class="scenic-list">
-        <scenicList :tab="tab"></scenicList>
+       <scenicList :tab="tab" :areaId="areaId" :value="value"></scenicList>
       </div>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
@@ -27,8 +27,19 @@ export default {
         items:[]
       },{
         text:'推荐排序',
-        items:[]
+        items: [
+          {
+            scenicName: '最新',
+            areaCode: ''
+          },
+          {
+            scenicName: '最热',
+            areaCode: ''
+          },
+        ]
       }],
+      areaId: this.$route.query.areaId,
+      value: ''
     }
   },
   components: {
@@ -36,6 +47,13 @@ export default {
     commonBottom,
     scenicList,
     selectTag
+  },
+  mounted() {
+    this.$http.get(this.baseUrl + '/yunchao/scenic/location/' + this.$route.query.areaId).then(res => {
+      if(res.data.data && res.data.data.length > 0) {
+        this.selectTag[0].items = res.data.data
+      }
+    })
   }
 }
 </script>

@@ -158,6 +158,14 @@ export default[
     }
   },
   {
+    path: '/newsDetail',
+    name: 'newsDetail',
+    component: () => import('@/view/newsDetail'),
+    meta: {
+      title: 'index'
+    }
+  },
+  {
     path: '/collect',
     name: 'collect',
     component: () => import('@/view/myCollection'),

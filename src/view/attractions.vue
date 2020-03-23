@@ -13,7 +13,7 @@
       <div class="attractions-content-intro clearfix">
         <p>介绍</p>
         <div v-html="attractions.introduction"></div>
-        <span class="pull-right">详情<img src="../assets/img/right.png" /></span>
+        <router-link tag="span" :to="'/scenicDetail/?id=' + $route.query.id + '&areaId=' + $route.query.areaId" class="pull-right">详情<img src="../assets/img/right.png" /></router-link>
       </div>
       <div class="attractions-content-other">
         <p>地址：{{ attractions.address }}</p>
@@ -45,11 +45,7 @@ export default {
   data() {
     return {
       navText: '详情',
-      bannerList: [
-        require('@/assets/img/2.png'),
-        require('@/assets/img/banner1.png'),
-        require('@/assets/img/2.png')
-      ],
+      bannerList: [],
       attractions: {
         title: '花海',
         fenshu: 5.0,
@@ -67,6 +63,17 @@ export default {
     commonSwiper,
     commonNav,
     commonBottom
+  },
+  mounted() {
+    this.$http.get(this.baseUrl + '/yunchao/scenic/introduce/' + this.$route.query.id).then(res => {
+      if(res.data) {
+        this.attractions.title = res.data.localScenicResp.name
+        this.attractions.introduction = res.data.localScenicResp.info
+        this.attractions.address = res.data.localScenicResp.address
+        this.attractions.time = res.data.localScenicResp.openTime
+        this.bannerList = res.data.localScenicResp.arrImgs
+      }
+    })
   },
 }
 </script>

@@ -2,16 +2,16 @@
   <div id="xiangsu-detail">
     <commonNav :navText="navText"></commonNav>
     <commonSwiper :bannerList="bannerList"></commonSwiper>
-    
     <div class="xiangsu-detail-content">
-        <detailNameBox :name="detailInfo.name" :likeCount="detailInfo.likeCount"></detailNameBox>
-        <addressPhone :location="detailInfo.location" :phone="detailInfo.phone" :toUrl="detailInfo.toUrl"></addressPhone>
+        <detailNameBox :name="detailInfo.name" :likeCount="detailInfo.likeNum"></detailNameBox>
+        <addressPhone :location="detailInfo.address" :phone="detailInfo.phone" :toUrl="detailInfo.toUrl"></addressPhone>
         <div class="xiangsu-detail-point-box">
             <div v-for="(item, index) in detailInfo.detail" :key="index" class="xiangsu-detail-point-item">
                 <pointCard :isPadding="false" :content="item.content" :text="item.title"></pointCard>
             </div>
         </div>
     </div>
+    <commonBottom :meta="$route.meta.title"></commonBottom>
   </div>
 </template>
 <script>
@@ -21,6 +21,7 @@ import pointTitle from '../components/common/pointTitle'
 import detailNameBox from '../components/common/detailNameBox'
 import pointCard from '../components/common/pointCard'
 import addressPhone from '../components/common/addressPhone'
+import commonBottom from '../components/commonBottom'
 
 export default {
   data() {
@@ -30,20 +31,7 @@ export default {
         require('@/assets/img/banner1.png'),
         require('@/assets/img/2.png')
       ],
-      detailInfo:{
-          name:'归心精品小院',
-          likeCount:10000,
-          location:'西安市 沿江大道182号【沿江大道\江汉路汉口金融中心、武汉广场、中山公园】',
-          phone:13131344568,
-          toUrl:'',
-          detail:[{
-              title:'详情介绍',
-              content:'2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，'
-          },{
-              title:'接待能力',
-              content:'2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，2006年开业，2018年装修 包含两个精品套房，'
-          }]
-      },
+      detailInfo:{},
       navText:'详情'
     }
   },
@@ -53,7 +41,22 @@ export default {
     pointTitle,
     detailNameBox,
     pointCard,
-    addressPhone
+    addressPhone,
+    commonBottom
+  },
+  mounted () {
+    this.$http.get(this.baseUrl + '/yunchao/rural/details/' + this.$route.query.id).then(res => {
+      this.detailInfo = res.data
+      this.bannerList = res.data.arrImgs;
+      this.detailInfo.address = res.data.jqArea.fullName
+      this.detailInfo.detail = [{
+          title:'详情介绍',
+          content:res.data.info
+      },{
+          title:'接待能力',
+          content:'无'
+      }]
+    })
   }
 }
 </script>

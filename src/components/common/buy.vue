@@ -3,12 +3,12 @@
     <div class="buy-fixed-box">
         <div class="buy-left">
             <div class="buy-left-icon-box">
-                <img src="../../assets/img/heart.png" />
+                <img src="../../assets/img/car.png" />
                 <div>购物车</div>
             </div>
             <div class="buy-left-icon-box">
-                <img src="../../assets/img/heart.png" />
-                <div>已收藏</div>
+                <img src="../../assets/img/star.png" />
+                <div>{{ flag ? '已收藏' : '点击收藏' }}</div>
             </div>
         </div>
         <div class="buy-right">
@@ -16,7 +16,7 @@
             <div class="buy-now">立即购买</div>
         </div>
     </div>
-    <car />
+    <car v-if="show" />
   </div>
 </template>
 <script>
@@ -30,6 +30,12 @@ export default {
       likeCount:{
           type:Number,
           default:0
+      },
+      show: {
+        type: Boolean
+      },
+      flag: {
+        type: [String, Number]
       }
   },
   data() {

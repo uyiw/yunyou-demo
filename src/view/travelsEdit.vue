@@ -17,7 +17,7 @@
         @change="onEditorChange($event)">
       </quill-editor>
     </div>
-    <div><van-button type="primary">提交</van-button></div>
+    <div><van-button type="primary" @click="submit">提交</van-button></div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
   </div>
 </template>
@@ -51,6 +51,9 @@ export default {
     commonNav,
     commonBottom
   },
+  mounted() {
+
+  },
   methods: {
     chooseImage() {
       var file = document.getElementById('file')
@@ -67,13 +70,26 @@ export default {
         reader.onloadend = (e) => {
           // _this.imgSrc=e.target.result
           this.fenmian = e.target.result
-          alert(this.fenmian)
         };
       }
     },
     onEditorChange: function(e) {
       console.log(e)
     },
+    submit: function() {
+      console.log(this.file)
+      if(this.file) {
+        var formData = new FormData()
+        formData.append('pics', this.file)
+        this.$http.post(this.baseUrl + '/yunchao/travels/upload', formData, {
+          headers:{
+            'Content-Type':'multipart/form-data'
+          }
+        }).then(res => {
+          console.log(res)
+        })
+      }
+    }
   }
 }
 </script>
