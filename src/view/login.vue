@@ -12,7 +12,8 @@
         </div>
         <div class="inputBox secondInput">
             <input class="code-input" v-model="code" />
-            <div class="code-text">请输入验证码</div>
+            <div v-if="!send" class="code-text">请输入验证码</div>
+            <div v-else  class="code-text">{{ time }} 秒</div>
         </div>
         <div v-if="!send" class="sendCodeButton" @click="sendCode()">发送验证码</div>
         <div v-if="send" class="sendCodeButton" @click="loginClick()">登录</div>
@@ -40,10 +41,25 @@ export default {
         { text: '+86', value: 1 },
         // { text: '+87', value: 2 },
       ],
-      send: 0
+      send: 0,
+      time: 59
     }
   },
   methods:{
+  },
+  watch: {
+    send: function(newVal, oldVal) {
+      if(newVal) {
+        var timer = setInterval(() => {
+          this.time--;
+          if(this.time < 1) {
+            clearInterval(timer);
+            this.time = 59;
+            this.send = false;
+          }
+        }, 1000)
+      }
+    }
   },
   components: {
     commonNav,
@@ -74,7 +90,13 @@ export default {
         return Toast.fail('请输入验证码');
       }
       this.$http.get(this.baseUrl + '/yunchao/user/login/code?code='+ this.code +'&phone=' + this.phone).then(res => {
-        console.log(res)
+        if(res.data.data[0] == '登录成功') {
+          console.log(res.headers.map.logininfo[0])
+          localStorage.setItem('cookie', res.headers.map.logininfo[0])
+          this.$router.go(-1)
+        }else {
+          Toast.fail(res.data.data[0])
+        }
       })
     }
   }

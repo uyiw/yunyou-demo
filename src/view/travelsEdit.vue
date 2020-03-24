@@ -24,6 +24,7 @@
 <script>
 import commonNav from '../components/commonNav'
 import commonBottom from '../components/commonBottom'
+import { Toast } from 'vant';
 export default {
   data() {
     return {
@@ -44,7 +45,8 @@ export default {
           ]
         }
 
-      }
+      },
+      travelsDetail: {}
     }
   },
   components: {
@@ -52,7 +54,12 @@ export default {
     commonBottom
   },
   mounted() {
-
+    if(this.$route.query.id) {
+      this.$http.get(this.baseUrl + '/yunchao/travels/details/' + this.$route.query.id).then(res => {
+        this.travelsDetail = res.data.jqTravelsResp
+        this.travelsDetail.topUrl = res.data.jqTravelsResp.arrImgs[0]
+      })
+    }
   },
   methods: {
     chooseImage() {
@@ -74,11 +81,12 @@ export default {
       }
     },
     onEditorChange: function(e) {
-      console.log(e)
+      this.content = e.html
     },
     submit: function() {
-      console.log(this.file)
-      if(this.file) {
+      if(!this.file || (this.$route.query.id && !this.travelsDetail.topUrl)) {
+        return Toast.fail('请上传图片');
+      }else if(this.file) {
         var formData = new FormData()
         formData.append('pics', this.file)
         this.$http.post(this.baseUrl + '/yunchao/travels/upload', formData, {
@@ -86,9 +94,48 @@ export default {
             'Content-Type':'multipart/form-data'
           }
         }).then(res => {
-          console.log(res)
+          this.imgUrl = res.data.data
+          this.submitData();
+
         })
       }
+      if(!this.file && this.travelsDetail.topUrl) {
+        this.imgUrl = this.travelsDetail.topUrl;
+        this.submitData();
+      }
+    },
+    submitData: function() {
+      if(!this.title || !this.title.trim()) {
+        return Toast.fail('请输入标题');
+      }
+      if(!this.content) {
+        return Toast.fail('请输入正文');
+      }
+      var url = '', data = {};
+      if(this.$route.query.id) {
+        url  = this.baseUrl + '/yunchao/travels/update'
+        data = {
+          imgs: this.imgUrl,
+          info: this.title + '_' +this.content,
+          id: this.$route.query.id
+        }
+      }else {
+        url  = this.baseUrl + '/yunchao/travels/add'
+        data = {
+          imgs: this.imgUrl,
+          info: this.title + '_' +this.content
+        }
+      }
+      this.$http.post(url, data, {
+        headers: {
+          'Cookie': localStorage.getItem('cookie') ? localStorage.getItem('cookie') : ''
+        }
+      }).then(res => {
+        if(res.data.message == '无登录') {
+          this.$router.push('/login')
+        }
+        console.log(res.data)
+      })
     }
   }
 }

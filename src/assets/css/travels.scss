@@ -101,10 +101,15 @@
         margin: 20px 0 5px;
       }
       & > p {
+        width: 100%;
         font-size:30px;
         font-weight:400;
         color:rgba(45,45,45,1);
-        line-height:42px;}
+        line-height:42px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 }

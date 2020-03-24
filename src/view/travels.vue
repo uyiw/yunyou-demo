@@ -33,7 +33,7 @@
             <div @click.stop="goToEdit" class="pull-right addNew">新增<van-icon name="plus" /></div>
           </div>
           <img :src="item.url" />
-          <p>{{ item.info }}</p>
+          <p>{{ item.info.split('_')[0] }}</p>
         </div>
       </van-list>
     </div>
@@ -105,7 +105,10 @@ export default {
     }
     this.$http.get(this.baseUrl + '/yunchao/travels/rotation').then(res => {
       if(res.data && res.data.length > 0) {
-        this.bannerList = res.data
+        res.data.forEach(item => {
+          this.bannerList.push(item.imgs)
+        })
+
       }
     })
   },
@@ -122,6 +125,8 @@ export default {
         if(res.data.data.result && res.data.data.result.length > 0) {
           res.data.data.result.forEach(item => {
             item.url = item.arrImgs[0]
+            var time = item.createDateStr.split(' ')[0].split('-');
+            item.createDateStr = time[0] + '年' + time[1] + '月' + time[2] + '日'
             this.travelsList.push(item)
           })
           this.loading = false;
