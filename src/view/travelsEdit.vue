@@ -41,7 +41,7 @@ export default {
             [{ 'color': [] }, { 'background': [] }],     // 字体颜色，字体背景颜色
             [{ 'align': [] }],    //对齐方式
             ['clean'],    //清除字体样式
-            ['image','video']    //上传图片、上传视频
+            ['image']    //上传图片、上传视频
           ]
         }
 
@@ -61,7 +61,27 @@ export default {
       })
     }
   },
+  beforeRouteEnter (to, from, next) {
+    if(to.meta.logined) {
+      if(localStorage.getItem('login') == 0) {
+        window.location.href = '#/login'
+      }else {
+        next();
+      }
+    }
+  },
   methods: {
+    dataURLtoFile: function(dataurl, filename) {
+      var arr = dataurl.split(','),
+          mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]),
+          n = bstr.length,
+          u8arr = new Uint8Array(n);
+      while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
     chooseImage() {
       var file = document.getElementById('file')
       file.click();
@@ -81,6 +101,7 @@ export default {
       }
     },
     onEditorChange: function(e) {
+      var img = e.html.indexOf('base64') !=  -1 ? e.html.split('src="')[1].split('"')[0] : '';
       this.content = e.html
     },
     submit: function() {
@@ -113,28 +134,30 @@ export default {
       }
       var url = '', data = {};
       if(this.$route.query.id) {
-        url  = this.baseUrl + '/yunchao/travels/update'
+        url  = this.baseUrl + '/yunchao/travels/update?token=' + localStorage.getItem('cookie')
         data = {
           imgs: this.imgUrl,
           info: this.title + '_' +this.content,
-          id: this.$route.query.id
+          id: this.$route.query.id,
         }
       }else {
-        url  = this.baseUrl + '/yunchao/travels/add'
+        url  = this.baseUrl + '/yunchao/travels/add?token=' + localStorage.getItem('cookie')
         data = {
           imgs: this.imgUrl,
-          info: this.title + '_' +this.content
+          info: this.title + '_' +this.content,
+          area: JSON.parse(localStorage.getItem('area')).areaId
         }
       }
-      this.$http.post(url, data, {
-        headers: {
-          'Cookie': localStorage.getItem('cookie') ? localStorage.getItem('cookie') : ''
-        }
-      }).then(res => {
+      this.$http.post(url, data).then(res => {
         if(res.data.message == '无登录') {
           this.$router.push('/login')
+        }else if(res.data.message == '操作成功') {
+          Toast.success('添加成功')
+          var time = setTimeout(() => {
+            clearTimeout(time);
+            this.$router.push('/travels')
+          }, 500)
         }
-        console.log(res.data)
       })
     }
   }

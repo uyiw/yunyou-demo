@@ -6,13 +6,20 @@
         <div v-for="(item,index) in navList" :class="navId==item.id?'collect-nav active':'collect-nav'" :key="index" @click="handleChangeNav(item.id)">{{item.text}}</div>
       </div>
       <div class="collect-list">
-        <div class="techan-item" v-for="(item,index) in dataList" :key="index">
-          <img class="techan-item-img" :src="item.img">
-          <div class="techan-item-name-box">
-            <div>{{item.name}}</div>
-            <img src="../assets/img/heart.png" />
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <div class="techan-item" v-for="(item,index) in dataList" :key="index">
+            <img class="techan-item-img" :src="item.img">
+            <div class="techan-item-name-box">
+              <div>{{item.name}}</div>
+              <img src="../assets/img/heart.png" />
+            </div>
           </div>
-        </div>
+        </van-list>
       </div>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
@@ -25,44 +32,23 @@ export default {
   data() {
     return {
       navText:'我的收藏',
-      navId:1,
-      dataList:[{
-        id:1,
-        img:require('@/assets/img/2.png'),
-        name:'归心精品小院',
-        isLike:false
-      },{
-        is:2,
-        img:require('@/assets/img/2.png'),
-        name:'归心精品小院',
-        isLike:false
-      },{
-        id:3,
-        img:require('@/assets/img/2.png'),
-        name:'归心精品小院',
-        isLike:false
-      },{
-        id:4,
-        img:require('@/assets/img/2.png'),
-        name:'归心精品小院',
-        isLike:false
-      },{
-        id:5,
-        img:require('@/assets/img/2.png'),
-        name:'归心精品小院',
-        isLike:false
-      }],
+      navId:5,
+      dataList:[],
+      loading: false,
+      finished: false,
+      page: 0,
+      totalNum: 10,
       navList:[{
-        id:1,
-        text:'区门'
+        id:5,
+        text:'景区'
       },{
         id:2,
         text:'民宿'
       },{
-        id:3,
+        id:10,
         text:'特产'
       },{
-        id:4,
+        id:6,
         text:'游记'
       }]
     }
@@ -70,6 +56,40 @@ export default {
   methods:{
     handleChangeNav:function(id){
       this.navId!=id?this.navId=id:''
+      this.page = 1;
+      this.getData();
+    },
+    getData() {
+      var url = ''
+      if(this.page == 1) this.dataList = []
+      this.$http.get(this.baseUrl + '/yunchao/favor/search/'+ this.page +'/10?token=' + localStorage.getItem('cookie')).then(res => {
+        if(res.data.data.result && res.data.data.result.length > 0) {
+          res.data.data.result.forEach(item => {
+            this.dataList.push(item)
+          })
+          this.totalNum = res.data.data.pagination.totalCount;
+          if(this.totalNum <= this.dataList.length) {
+            this.finished = true;
+          }
+        }else {
+          this.dataList = []
+        }
+      })
+    },
+    onLoad() {
+      this.page += 1;
+      if(this.page >= 1) {
+        this.getData();
+      }
+    },
+  },
+  beforeRouteEnter (to, from, next) {
+    if(to.meta.logined) {
+      if(localStorage.getItem('login') == 0) {
+        window.location.href = '#/login'
+      }else {
+        next();
+      }
     }
   },
   components: {

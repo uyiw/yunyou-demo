@@ -6,7 +6,7 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <div v-for="(item, index) in foodList" :key="index" class="clearfix foodItem" @click="goToDetail(item.id, item.area)">
+      <div v-for="(item, index) in foodList" :key="index" class="clearfix foodItem" @click="goToDetail(item.id, item.spotId)">
         <img :src="item.url" class="pull-left" />
         <div class="pull-left">
           <h3>{{ item.name }}</h3>
@@ -82,7 +82,7 @@ export default {
       this.$http.get(url).then(res => {
         if(res.data.data.result && res.data.data.result.length > 0) {
           res.data.data.result.forEach(item => {
-            item.url = item.arrImgs[0]
+            item.url = item.arrImgs ? item.arrImgs[0] : ''
             this.foodList.push(item)
           })
           this.loading = false;

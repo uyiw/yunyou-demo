@@ -10,7 +10,7 @@
         <img :src="item.imgs" />
         <h3>{{ item.name }}</h3>
         <p><img src="../../assets/img/16.png" /> {{ item.address }}</p>
-        <div class="scenicList-con">{{ item.info }}</div>
+        <div class="scenicList-con">{{ item.info.split('_')[1] }}</div>
       </div>
     </van-list>
   </div>

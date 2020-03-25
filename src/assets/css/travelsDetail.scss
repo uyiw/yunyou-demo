@@ -57,6 +57,9 @@
       font-weight:400;
       color:rgba(45,45,45,1);
       line-height:37px;
+      img {
+        max-width: 100%;
+      }
     }
   }
 }

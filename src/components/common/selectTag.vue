@@ -1,15 +1,17 @@
 <template>
   <div class="common-select" :style="isFirst?{marginLeft:0}:{}">
-    <div class="common-select-text"  @click="showClick">{{text}}</div>
+    <div class="common-select-text"  @click="showClick">{{indexText || text}}</div>
     <div class="common-select-icon" @click="showClick">
       <img src="../../assets/img/down.png" />
     </div>
     <div class="showAll" v-if="show">
       <ul v-show="text == '全部景区'" v-if="items && items.length > 0">
-        <li @click="chooseClick(item1.id)" v-for="(item1, index1) in items" :class="{'choose': scenicSpotAreaId == item1.id}" :key="index1">{{ item1.scenicName }}</li>
+        <li @click="chooseClick(null, '全部景区')" :class="{'choose': !scenicSpotAreaId}">全部景区</li>
+        <li @click="chooseClick(item1.id, item1.scenicName)" v-for="(item1, index1) in items" :class="{'choose': scenicSpotAreaId == item1.id}" :key="index1">{{ item1.scenicName }}</li>
       </ul>
       <ul v-show="text == '推荐排序'" v-if="items && items.length > 0">
-        <li @click="chooseClick1(item1.areaCode)" v-for="(item1, index1) in items" :class="{'choose': choose == item1.areaCode}" :key="index1">{{ item1.scenicName }}</li>
+        <li  :class="{'choose': !choose}" @click="chooseClick1(null, '推荐排序')">推荐排序</li>
+        <li @click="chooseClick1(item1.areaCode, item1.scenicName)" v-for="(item1, index1) in items" :class="{'choose': choose == item1.areaCode}" :key="index1">{{ item1.scenicName }}</li>
       </ul>
     </div>
   </div>
@@ -21,21 +23,24 @@ export default {
     return {
       scenicSpotAreaId: '',
       show: false,
-      choose: ''
+      choose: '',
+      indexText: '',
     }
   },
   methods: {
     showClick: function() {
       this.show = !this.show
     },
-    chooseClick: function(index) {
+    chooseClick: function(index, scenicName) {
       this.scenicSpotAreaId = index;
       this.show = false;
+      this.indexText = scenicName;
       this.$parent.$emit('changeAreaId', index)
     },
-    chooseClick1: function(index) {
+    chooseClick1: function(index, scenicName) {
       this.choose = index;
       this.show = false;
+      this.indexText = scenicName;
       this.$parent.$emit('changePai', index)
     }
   }

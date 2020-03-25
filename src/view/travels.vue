@@ -41,6 +41,7 @@
   </div>
 </template>
 <script>
+import { Toast } from 'vant';
 import commonNav from '../components/commonNav'
 import commonBottom from '../components/commonBottom'
 import commonSwiper from '../components/common/commonSwiper'
@@ -117,7 +118,7 @@ export default {
       var url = '';
       if(this.page <= 1)this.travelsList = [];
       if(this.tabIndex == 'isMy') {
-        url = this.baseUrl + '/yunchao/travels/search/' + this.page  + '/10?areaId=' + this.areaId + '&isMy=1&queryStr=' + this.value
+        url = this.baseUrl + '/yunchao/travels/search/' + this.page  + '/10?areaId=' + this.areaId + '&isMy=1&token=' + localStorage.getItem('cookie') + '&queryStr=' + this.value
       }else {
         url = this.baseUrl + '/yunchao/travels/search/' + this.page  + '/10?areaId=' + this.areaId  + '&order=' + this.tabIndex + '&queryStr=' + this.value
       }
@@ -146,7 +147,7 @@ export default {
       this.$router.push('/travelsDetail?id=' + index)
     },
     goToEdit: function() {
-      this.$router.push('/travelsEdit')
+      localStorage.getItem('login') == 1 ? this.$router.push('/travelsEdit') : Toast.fail('请先登录')
     },
     openChooseArea: function() {
       if(!this.showArea) this.showArea = true;

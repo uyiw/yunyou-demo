@@ -17,7 +17,7 @@
             <img class="techan-item-img" :src="item.imageUrls">
             <div class="techan-item-name-box">
               <div>{{item.name}}</div>
-              <img :src="item.flag ? require('@/assets/img/like.png') : require('@/assets/img/noLike.png')" />
+              <img @click.stop="collect(item.id, item.flag)" :src="item.flag ? require('@/assets/img/like.png') : require('@/assets/img/noLike.png')" />
             </div>
           </div>
         </van-list>
@@ -27,6 +27,7 @@
   </div>
 </template>
 <script>
+import { Toast } from 'vant'
 import commonHeader from '../components/commonHeader'
 import commonNav from '../components/commonNav'
 import commonBottom from '../components/commonBottom'
@@ -81,7 +82,7 @@ export default {
     },
     getData: function() {
       if(this.page <= 1) this.techanList = []
-      this.$http.get(this.baseUrl + '/yunchao/specialty/search/'+ this.page +'/10?areaId='+ this.areaId +'&type=' + this.activeId + '&queryStr=' + this.value).then(res => {
+      this.$http.get(this.baseUrl + '/yunchao/specialty/search/'+ this.page +'/10?areaId='+ this.areaId +'&type=' + this.activeId + '&queryStr=' + this.value + '&token=' + localStorage.getItem('cookie')).then(res => {
         if(res.data.data[0] && res.data.data[0].length > 0) {
           res.data.data[0].forEach(item => {
             this.techanList.push(item)
@@ -108,6 +109,35 @@ export default {
       if(this.page >= 1) {
         this.getData();
       }
+    },
+    collect(id, flag) {
+      var url = ''
+      if(!flag) {
+        url = this.baseUrl + '/yunchao/specialty/favor/add/' + id + '?token=' + localStorage.getItem('cookie')
+      }else {
+        url = this.baseUrl + '/yunchao/specialty/favor/cancel/' + id + '?token=' + localStorage.getItem('cookie')
+      }
+      this.$http.post(url).then(res => {
+        if(res.data.message == '用户未登录!') {
+          this.$router.push('/login')
+        }else if (res.data.data[0] == '点赞成功') {
+          this.techanList.forEach(item => {
+            if(item.id == id) {
+              item.flag = 1;
+            }
+          })
+          Toast.success(res.data.data[0])
+        }else if (res.data.data[0] == '取消成功') {
+          this.techanList.forEach(item => {
+            if(item.id == id) {
+              item.flag = null;
+            }
+          })
+          Toast.success(res.data.data[0])
+        }else {
+          Toast.fail(res.data.message)
+        }
+      })
     }
   },
   components: {

@@ -12,7 +12,7 @@
       </div>
       <div class="attractions-content-intro clearfix">
         <p>介绍</p>
-        <div v-html="attractions.introduction"></div>
+        <div v-html="attractions.introduction.split('_')[1]"></div>
         <router-link tag="span" to="" class="pull-right">详情<img src="../assets/img/right.png" /></router-link>
       </div>
       <div class="attractions-content-other">

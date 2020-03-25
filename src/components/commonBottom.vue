@@ -42,6 +42,12 @@ export default {
         },
       ]
     }
+  },
+  mounted() {
+    this.$http.get(this.baseUrl + '/yunchao/user/isLogin?token=' + localStorage.getItem('cookie')).then(res => {
+      if(res.data) localStorage.setItem('login', 1)
+      else localStorage.setItem('login', 0)
+    })
   }
 }
 </script>

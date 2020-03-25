@@ -90,12 +90,11 @@ export default {
         return Toast.fail('请输入验证码');
       }
       this.$http.get(this.baseUrl + '/yunchao/user/login/code?code='+ this.code +'&phone=' + this.phone).then(res => {
-        if(res.data.data[0] == '登录成功') {
-          console.log(res.headers.map.logininfo[0])
-          localStorage.setItem('cookie', res.headers.map.logininfo[0])
+        if(res.data.data) {
+          localStorage.setItem('cookie', res.data.data)
           this.$router.go(-1)
         }else {
-          Toast.fail(res.data.data[0])
+          Toast.fail(res.data.message)
         }
       })
     }
@@ -250,17 +249,7 @@ export default {
           }
       }
   }
-  .van-toast {
-    width: 50%;
-    font-size: 28px;
-    line-height: 34px;
-    .van-icon-fail {
-      display: none;
-    }
-    .van-toast__text {
-      margin-top: 0;
-    }
-  }
+
 
 </style>
 

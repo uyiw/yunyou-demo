@@ -6,7 +6,7 @@
       <h2>{{ travelsDetail.info ? travelsDetail.info.split('_')[0] : '' }}</h2>
       <div class="travelsDetail-con-top">
         <img :src="travelsDetail.jqCustomer.img" />
-        <span>{{ travelsDetail.jqCustomer.nickName }}</span>
+        <span>{{ travelsDetail.jqCustomer.nickname }}</span>
       </div>
       <div class="travelsDetail-con-intro">
         <div>
@@ -16,17 +16,17 @@
         </div>
         <div>
           <img src="../assets/img/42.png" />
-          <p>{{ travelsDetail.playDay }}</p>
+          <p>{{ travelsDetail.playDay ? travelsDetail.playDay : 0 }}</p>
           <p>出行天数</p>
         </div>
         <div>
           <img src="../assets/img/43.png" />
-          <p>{{ travelsDetail.playPeople }}</p>
+          <p>{{ travelsDetail.playPeople ? travelsDetail.playPeople : 0 }}</p>
           <p>出行人数</p>
         </div>
         <div>
           <img src="../assets/img/44.png" />
-          <p>￥{{ travelsDetail.price }}</p>
+          <p>￥{{ travelsDetail.price ? travelsDetail.price : 0 }}</p>
           <p>人均消费</p>
         </div>
       </div>

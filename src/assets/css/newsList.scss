@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: #F3F3F3;
   .news-list-con {
-    & > div {
+    .news-item {
       width: 100%;
       height: 90px;
       padding: 0 30px;

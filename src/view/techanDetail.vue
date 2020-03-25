@@ -10,10 +10,12 @@
           <pointCard :content="detailInfo.detail.content" :text="detailInfo.detail.title"></pointCard>
         </div>
     </div>
-    <buy :show="show" :flag="flag" @clickCar="clickCar"></buy>
+    <buy :flag="flag" @clickCar="clickCar" @collect="collect" @showCar="showCar"></buy>
+    <car v-if="show" />
   </div>
 </template>
 <script>
+import { Toast } from 'vant'
 import commonSwiper from '../components/common/commonSwiper'
 import commonNav from '../components/commonNav'
 import pointTitle from '../components/common/pointTitle'
@@ -21,6 +23,7 @@ import detailNameBox from '../components/common/detailNameBox'
 import pointCard from '../components/common/pointCard'
 import addressPhone from '../components/common/addressPhone'
 import buy from '../components/common/buy'
+import car from '..//components/common/car'
 export default {
   data() {
     return {
@@ -31,7 +34,7 @@ export default {
       },
       navText:'详情',
       flag: '',
-      specialLocalProduct: {}
+      specialLocalProduct: {},
     }
   },
   components: {
@@ -41,10 +44,11 @@ export default {
     detailNameBox,
     pointCard,
     addressPhone,
-    buy
+    buy,
+    car
   },
   mounted () {
-    this.$http.get(this.baseUrl + '/yunchao/specialty/details/' + this.$route.query.id).then(res => {
+    this.$http.get(this.baseUrl + '/yunchao/specialty/details/' + this.$route.query.id + '?token=' + localStorage.getItem('cookie')).then(res => {
       this.bannerList = res.data.localSpecialty.arrImgs;
       this.detailInfo = res.data.localSpecialty;
       this.detailInfo.detail = {
@@ -57,9 +61,54 @@ export default {
   },
   methods: {
     clickCar: function() {
-      this.$http.post(this.baseUrl + '/yunchao/cart/add?specialtyId=' + this.$route.query.id).then(res => {
+      this.$http.post(this.baseUrl + '/yunchao/cart/add?specialtyId=' + this.$route.query.id + '&token=' + localStorage.getItem('cookie')).then(res => {
         if(res.data.message == '用户没有登录') {
           this.$router.push('/login')
+        }else if(res.data.message == '操作成功') {
+          Toast.success(res.data.message)
+        }else {
+          Toast.fail(res.data.message)
+        }
+      })
+    },
+    collect: function() {
+      var url = ''
+      if(!this.flag) {
+        url = this.baseUrl + '/yunchao/specialty/favor/add/' + this.detailInfo.id + '?token=' + localStorage.getItem('cookie')
+      }else {
+        url = this.baseUrl + '/yunchao/specialty/favor/cancel/' + this.detailInfo.id + '?token=' + localStorage.getItem('cookie')
+      }
+      this.$http.post(url).then(res => {
+        if(res.data.message == '用户未登录!') {
+          this.$router.push('/login')
+        }else if (res.data.data[0] == '点赞成功') {
+          this.flag = 1;
+          this.specialLocalProduct.flag = 1;
+          Toast.success(res.data.data[0])
+        }else if (res.data.data[0] == '取消成功') {
+          this.flag = null;
+          this.specialLocalProduct.flag = null;
+          Toast.success(res.data.data[0])
+        }else {
+          Toast.fail(res.data.message)
+        }
+      })
+    },
+    showCar() {
+      this.show = true;
+      this.$http.get(this.baseUrl + '/yunchao/cart/query?token=' + localStorage.getItem('cookie')).then(res => {
+        if(res.data.data && res.data.data.length) {
+          res.data.data.forEach(item => {
+            // this.carList.push({
+            //     id: item.cartProducts.productId,
+            //     img: item.cartProducts.imageUrl,
+            //     name: item.cartProducts.name,
+            //     guige:'规格',
+            //     price: item.cartProducts.price,
+            //     count: item.cartProducts.cartNum,
+            //     isSelect:false,
+            // })
+          })
         }
       })
     }

@@ -2,12 +2,12 @@
   <div id="message">
     <commonNav :navText="navText"></commonNav>
     <div class="message-list">
-        <div class="message-item" v-for="(item,index) in messageList" :key="index">
+        <router-link :to="item.url" class="message-item" v-for="(item,index) in messageList" :key="index">
             <img class="message-icon" :src="item.icon" />
             <div class="message-info">
                 <div class="message-title">{{item.title}}</div>
                 <div class="message-des">
-                    <div v-if="item.isRead" class="message-dot"></div>
+                    <div v-if="!item.isRead" class="message-dot"></div>
                     <div class="message-des-content">{{item.des}}</div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                 <div>查看</div>
                 <img src="../assets/img/messageRight.png" />
             </div>
-        </div>
+        </router-link>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
   </div>
@@ -27,15 +27,17 @@ export default {
   data() {
     return {
       messageList:[{
-          icon:require("../assets/img/myLove.png"),
+          icon:require("../assets/img/1-3.png"),
           title:'编辑游记主题',
           des:'编辑游记主题',
-          isRead:true
+          isRead:true,
+          url: '/myYouji'
       },{
-          icon:require("../assets/img/myLove.png"),
-          title:'编辑游记主题',
-          des:'编辑游记主题',
-          isRead:false
+          icon:require("../assets/img/1-2.png"),
+          title:'热门活动',
+          des:'暑期嗨翻天',
+          isRead:false,
+          url: ''
       }],
       navText:'消息中心'
     }

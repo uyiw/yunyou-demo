@@ -2,11 +2,11 @@
   <div class="buy-box">
     <div class="buy-fixed-box">
         <div class="buy-left">
-            <div class="buy-left-icon-box">
+            <div class="buy-left-icon-box" @click="showCar()">
                 <img src="../../assets/img/car.png" />
                 <div>购物车</div>
             </div>
-            <div class="buy-left-icon-box">
+            <div class="buy-left-icon-box" @click="collect()">
                 <img src="../../assets/img/star.png" />
                 <div>{{ flag ? '已收藏' : '点击收藏' }}</div>
             </div>
@@ -16,11 +16,9 @@
             <div class="buy-now">立即购买</div>
         </div>
     </div>
-    <car v-if="show" />
   </div>
 </template>
 <script>
-import car from "./car"
 export default {
   props:{
       name:{
@@ -31,9 +29,6 @@ export default {
           type:Number,
           default:0
       },
-      show: {
-        type: Boolean
-      },
       flag: {
         type: [String, Number]
       }
@@ -42,12 +37,15 @@ export default {
     return {
     }
   },
-  components:{
-    car,
-  },
   methods: {
     addCar() {
       this.$emit('clickCar', 1)
+    },
+    collect() {
+      this.$emit('collect')
+    },
+    showCar() {
+      this.$emit('showCar')
     }
   }
 }

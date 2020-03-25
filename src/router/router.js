@@ -120,7 +120,8 @@ export default[
     name: 'travelsEdit',
     component: () => import('@/view/travelsEdit'),
     meta: {
-      title: 'travels'
+      title: 'travels',
+      logined: true
     }
   },
   {
@@ -170,7 +171,8 @@ export default[
     name: 'collect',
     component: () => import('@/view/myCollection'),
     meta: {
-      title: 'wode'
+      title: 'wode',
+      logined: true
     }
   },
   {
@@ -183,7 +185,8 @@ export default[
     name: 'myyouji',
     component: () => import('@/view/myYouji'),
     meta: {
-      title: 'wode'
+      title: 'wode',
+      logined: true
     }
   },
 ]
