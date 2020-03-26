@@ -19,7 +19,7 @@
         <div v-if="send" class="sendCodeButton" @click="loginClick()">登录</div>
         <div class="des des1">点击按钮即表示你同意并遵守</div>
         <div class="des">《使用协议》和《隐私协议》</div>
-        <div class="wx-login">
+        <div class="wx-login" @click="weChatLogin">
             <img src="../assets/img/wx.png" />
             <div>微信</div>
         </div>
@@ -92,11 +92,17 @@ export default {
       this.$http.get(this.baseUrl + '/yunchao/user/login/code?code='+ this.code +'&phone=' + this.phone).then(res => {
         if(res.data.data) {
           localStorage.setItem('cookie', res.data.data)
-          this.$router.go(-1)
+          localStorage.setItem('login', 1)
+          this.$router.push('/index')
         }else {
           Toast.fail(res.data.message)
         }
       })
+    },
+    weChatLogin() {
+      // this.$http.get(this.baseUrl + '/yunchao/user/login/wechat').then(res => {
+      //   console.log()
+      // })
     }
   }
 }

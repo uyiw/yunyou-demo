@@ -4,7 +4,7 @@
     <div class="common-detail-name">{{name}}</div>
     <div  class="common-detail-like-box">
         <div v-if="likeCount>0">{{likeCount>9999?'9999+':likeCount}}</div>
-        <img v-if="likeCount>0" src="../../assets/img/heart.png">
+        <img @click="collect" :src="flag ? require('@/assets/img/like.png') : require('@/assets/img/noLike.png') ">
     </div>
   </div>
 </template>
@@ -18,12 +18,20 @@ export default {
       likeCount:{
           type:Number,
           default:0
+      },
+      flag: {
+        type: Boolean
       }
   },
   data() {
     return {
     }
-  }
+  },
+  methods: {
+    collect() {
+      this.$emit('collect')
+    }
+  },
 }
 </script>
 <style lang="scss">

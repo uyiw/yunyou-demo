@@ -41,15 +41,6 @@ export default {
     commonNav,
     commonBottom
   },
-  beforeRouteEnter (to, from, next) {
-    if(to.meta.logined) {
-      if(localStorage.getItem('login') == 0) {
-        window.location.href = '#/login'
-      }else {
-        next();
-      }
-    }
-  },
   methods: {
     getData() {
       this.$http.get(this.baseUrl + '/yunchao/travels/search/' + this.page  + '/10?isMy=1&token=' + localStorage.getItem('cookie')).then(res => {
@@ -61,11 +52,11 @@ export default {
             item.decodeImgs = item.decodeImgs.length > 3 ? item.decodeImgs.sclice(0, 2) : (item.decodeImgs.length > 1 ? item.decodeImgs : [])
             this.dataList.push(item)
           })
-          this.loading = false;
-          this.totalNum = res.data.data.pagination.totalCount;
-          if(this.dataList.length >= this.totalNum) {
-            this.finished = true;
-          }
+        }
+        this.loading = false;
+        this.totalNum = res.data.data.pagination.totalCount;
+        if(this.dataList.length >= this.totalNum) {
+          this.finished = true;
         }
       })
     },

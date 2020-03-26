@@ -19,7 +19,7 @@
             <span>{{ item.phone }}</span>
           </p>
           <div>
-            <span>{{ item.likeNum }}+</span>
+            <span>{{ item.likeNum > 999 ? (item.likeNum + '+') : item.likeNum }}</span>
             <img src="../../assets/img/19.png" />
           </div>
         </div>

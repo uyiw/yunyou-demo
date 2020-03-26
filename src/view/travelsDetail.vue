@@ -7,6 +7,7 @@
       <div class="travelsDetail-con-top">
         <img :src="travelsDetail.jqCustomer.img" />
         <span>{{ travelsDetail.jqCustomer.nickname }}</span>
+        <div class="edit-btn" v-if="travelsDetail.jqCustomer && customerId == travelsDetail.jqCustomer.id" @click="goToEdit">编辑</div>
       </div>
       <div class="travelsDetail-con-intro">
         <div>
@@ -32,7 +33,7 @@
       </div>
       <div class="travelsDetail-con-con" v-html="travelsDetail.info ? travelsDetail.info.split('_')[1] : ''"></div>
     </div>
-    <commonBottom :meta="$route.meta.title"></commonBottom>
+    <commonBottom :meta="$route.meta.title" @knowOwner="knowOwner"></commonBottom>
   </div>
 </template>
 <script>
@@ -45,7 +46,8 @@ export default {
       navText: '详情',
       travelsDetail: {
         jqCustomer: {}
-      }
+      },
+      customerId: ''
     }
   },
   components: {
@@ -56,8 +58,16 @@ export default {
     this.travelsDetail.content = utils.pxToRem(this.travelsDetail.content);
     this.$http.get(this.baseUrl + '/yunchao/travels/details/' + this.$route.query.id).then(res => {
       this.travelsDetail = res.data.jqTravelsResp
-      this.travelsDetail.topUrl = res.data.jqTravelsResp.arrImgs[0]
+      this.travelsDetail.topUrl = res.data.jqTravelsResp.arrImgs[0];
     })
+  },
+  methods: {
+    knowOwner: function(data) {
+      this.customerId = data;
+    },
+    goToEdit: function() {
+      this.$router.push('/travelsEdit?id=' + this.travelsDetail.id)
+    }
   }
 }
 </script>

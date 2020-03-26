@@ -56,18 +56,10 @@ export default {
   mounted() {
     if(this.$route.query.id) {
       this.$http.get(this.baseUrl + '/yunchao/travels/details/' + this.$route.query.id).then(res => {
-        this.travelsDetail = res.data.jqTravelsResp
-        this.travelsDetail.topUrl = res.data.jqTravelsResp.arrImgs[0]
+        this.title = res.data.jqTravelsResp.info.split('_')[0]
+        this.content = res.data.jqTravelsResp.info.split('_')[1]
+        this.fenmian = res.data.jqTravelsResp.arrImgs[0]
       })
-    }
-  },
-  beforeRouteEnter (to, from, next) {
-    if(to.meta.logined) {
-      if(localStorage.getItem('login') == 0) {
-        window.location.href = '#/login'
-      }else {
-        next();
-      }
     }
   },
   methods: {
@@ -105,7 +97,7 @@ export default {
       this.content = e.html
     },
     submit: function() {
-      if(!this.file || (this.$route.query.id && !this.travelsDetail.topUrl)) {
+      if(!this.file && (this.$route.query.id && !this.fenmian)) {
         return Toast.fail('请上传图片');
       }else if(this.file) {
         var formData = new FormData()
@@ -120,8 +112,8 @@ export default {
 
         })
       }
-      if(!this.file && this.travelsDetail.topUrl) {
-        this.imgUrl = this.travelsDetail.topUrl;
+      if(!this.file && this.fenmian) {
+        this.imgUrl = this.fenmian;
         this.submitData();
       }
     },
@@ -140,6 +132,17 @@ export default {
           info: this.title + '_' +this.content,
           id: this.$route.query.id,
         }
+        this.$http.put(url, data).then(res => {
+          if(res.data.message == '无登录') {
+            this.$router.push('/')
+          }else if(res.data.message == '操作成功') {
+            Toast.success('修改成功')
+            var time = setTimeout(() => {
+              clearTimeout(time);
+              this.$router.push('/travels')
+            }, 500)
+          }
+        })
       }else {
         url  = this.baseUrl + '/yunchao/travels/add?token=' + localStorage.getItem('cookie')
         data = {
@@ -147,18 +150,19 @@ export default {
           info: this.title + '_' +this.content,
           area: JSON.parse(localStorage.getItem('area')).areaId
         }
+        this.$http.post(url, data).then(res => {
+          if(res.data.message == '无登录') {
+            this.$router.push('/')
+          }else if(res.data.message == '操作成功') {
+            Toast.success('添加成功')
+            var time = setTimeout(() => {
+              clearTimeout(time);
+              this.$router.push('/travels')
+            }, 500)
+          }
+        })
       }
-      this.$http.post(url, data).then(res => {
-        if(res.data.message == '无登录') {
-          this.$router.push('/login')
-        }else if(res.data.message == '操作成功') {
-          Toast.success('添加成功')
-          var time = setTimeout(() => {
-            clearTimeout(time);
-            this.$router.push('/travels')
-          }, 500)
-        }
-      })
+
     }
   }
 }

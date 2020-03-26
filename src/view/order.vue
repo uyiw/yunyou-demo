@@ -6,6 +6,12 @@
         <div @click="changeNav(2)" :class="navId==2?'order-nav-item active':'order-nav-item'">代付款</div>
     </div>
     <div class="order-list">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
         <div class="order-item" v-for="(item,index) in orderList" :key="index">
             <div class="order-item-time">{{item.time}}</div>
             <div class="order-item-list">
@@ -25,7 +31,7 @@
             </div>
             <div class="order-bottom">共{{item.count}}件商品 实付金额：¥{{item.money.toFixed(2)}}</div>
         </div>
-        
+      </van-list>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
   </div>
@@ -36,49 +42,75 @@ import commonNav from '../components/commonNav'
 export default {
   data() {
     return {
-        navId:1,
-        navText:'商品订单',
-        orderList:[{
-            time:'2019-12-12  09:32',
-            count:3,
-            money:1000,
-            list:[{
-                img:require("../assets/img/2.png"),
-                title:'机器人',
-                money:100,
-                count:1,
-                guige:"白色"
-            },{
-                img:require("../assets/img/2.png"),
-                title:'机器人',
-                money:100,
-                count:1,
-                guige:"白色"
-            },{
-                img:require("../assets/img/2.png"),
-                title:'机器人',
-                money:100,
-                count:1,
-                guige:"白色"
-            }]
-        },{
-            time:'2019-12-12  09:32',
-            count:1,
-            money:1000,
-            list:[{
-                img:require("../assets/img/2.png"),
-                title:'机器人',
-                money:100,
-                count:1,
-                guige:"白色"
-            }]
-        }]
+			navId:1,
+      navText:'商品订单',
+      orderList: [],
+			// orderList:[{
+			// 		time:'2019-12-12  09:32',
+			// 		count:3,
+			// 		money:1000,
+			// 		list:[{
+			// 				img:require("../assets/img/2.png"),
+			// 				title:'机器人',
+			// 				money:100,
+			// 				count:1,
+			// 				guige:"白色"
+			// 		},{
+			// 				img:require("../assets/img/2.png"),
+			// 				title:'机器人',
+			// 				money:100,
+			// 				count:1,
+			// 				guige:"白色"
+			// 		},{
+			// 				img:require("../assets/img/2.png"),
+			// 				title:'机器人',
+			// 				money:100,
+			// 				count:1,
+			// 				guige:"白色"
+			// 		}]
+			// },{
+			// 		time:'2019-12-12  09:32',
+			// 		count:1,
+			// 		money:1000,
+			// 		list:[{
+			// 				img:require("../assets/img/2.png"),
+			// 				title:'机器人',
+			// 				money:100,
+			// 				count:1,
+			// 				guige:"白色"
+			// 		}]
+			// }],
+      loading: false,
+      finished: false,
+      page: 0,
+      totalNum: 10,
     }
   },
   methods:{
-      changeNav:function(id){
-          this.navId!=id?this.navId=id:''
+    changeNav:function(id){
+      this.navId!=id?this.navId=id:''
+      this.page = 1;
+      this.getData();
+    },
+    getData() {
+      this.$http.get(this.baseUrl + '/yunchao/order/query/'+ this.page +'/10?token=' + localStorage.getItem('cookie')).then(res => {
+        if(res.data.data.result && res.data.data.result.length > 0) {
+          res.data.data.result.forEach(element => {
+
+          });
+        }
+        this.totalNum = res.data.data.pagination.totalCount;
+        if(this.totalNum <= this.orderList.length) {
+          this.finished = true;
+        }
+      })
+    },
+    onLoad() {
+      this.page += 1;
+      if(this.page >= 1) {
+        this.getData();
       }
+    },
   },
   components: {
       commonBottom,
@@ -112,6 +144,7 @@ export default {
       width:100%;
       display:flex;
       flex-direction:column;
+      margin-top: 20px;
       .order-item{
           width:100%;
           .order-item-time{

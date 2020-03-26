@@ -2,7 +2,7 @@
   <div class="car-box">
     <div class="car-content">
         <div class="car-hearder">
-            <img src="../../assets/img/carBack.png" />
+            <img src="../../assets/img/carBack.png" @click="closeBtn" />
             <div>购物车</div>
         </div>
         <div class="car-list-box">
@@ -22,8 +22,8 @@
                             <div class="shop-name">{{item1.name}}</div>
                             <div class="shop-guige">{{item1.guige}}</div>
                             <div class="shop-price-box">
-                                <div class="shop-price">￥{{item1.price.toFixed(2)}}</div>
-                                <van-stepper @change="sumAllSelect" v-model="item1.count" />
+                                <div class="shop-price">￥{{parseInt(item1.price).toFixed(2)}}</div>
+                                <van-stepper @change="sumAllSelect" :name="'productId='+ item1.id +'&storeId='+ item.id +''" v-model="item1.count" />
                             </div>
                         </div>
                     </div>
@@ -40,139 +40,110 @@
                 <div>合计:</div>
                 <div>￥{{totalPrice.toFixed(2)}}</div>
             </div>
-            <div class="car-bottom-right">去结算</div>
+            <div class="car-bottom-right" @click="createOrder">去结算</div>
         </div>
     </div>
   </div>
 </template>
 <script>
 export default {
+  props: ['carList1'],
   data() {
     return {
-        allSelect:false,
-        totalPrice:0,
-        carList:[{
-            storeName:'店名',
-            isSelect:false,
-            id:1,
-            shoping:[{
-                id:1,
-                img:require("../../assets/img/2.png"),
-                name:'商品名字',
-                guige:'规格',
-                price:99,
-                count:1,
-                isSelect:false,
-            },{
-                id:2,
-                img:require("../../assets/img/2.png"),
-                name:'商品名字',
-                guige:'规格',
-                price:99,
-                count:1,
-                isSelect:false,
-            }]
-        },{
-            storeName:'店名',
-            isSelect:false,
-            id:2,
-            shoping:[{
-                id:3,
-                img:require("../../assets/img/2.png"),
-                name:'商品名字',
-                guige:'规格',
-                price:99,
-                count:1,
-                isSelect:false,
-            }]
-        },{
-            storeName:'店名',
-            isSelect:false,
-            id:3,
-            shoping:[{
-                id:4,
-                img:require("../../assets/img/2.png"),
-                name:'商品名字',
-                guige:'规格',
-                price:99,
-                count:1,
-                isSelect:false,
-            }]
-        }]
+      allSelect:false,
+      totalPrice:0,
+      carList: [{
+        shoping: []
+      }]
+    }
+  },
+  watch: {
+    carList1: function(newVal, oldVal) {
+      if(newVal) this.carList = newVal
     }
   },
   methods:{
-      handleDeleteStore:function(id){
-          for(let i=0;i<this.carList.length;i++){
-              if(id==this.carList[i].id){
-                  this.carList.splice(i,1)
-              }
-          }
-          this.sumAllSelect()
-      },
-      handleSelectStore:function(select,id){
-          this.carList=this.carList.map(item=>{
-              if(item.id==id){
-                  item.isSelect=select;
-                  item.shoping.forEach(item1=>{
-                      item1.isSelect=select;
-                      return item1;
-                  })
-              }
-              return item;
-          })
-          this.sumAllSelect()
-      },
-      handleSelectShoping:function(id,shopId){
-          this.carList=this.carList.map(item=>{
-              if(item.id==id){
-                  item.shoping.forEach(item1=>{
-                      if(item1.id==shopId){
-                          console.log(item1.id,shopId)
-                          item1.isSelect=!item1.isSelect;
-                      }
-                      return item1;
-                  })
-                  let isAll=true;
-                  item.shoping.map(item1=>{
-                      if(!item1.isSelect){
-                          isAll=false;
-                      }
-                  })
-                  item.isSelect=isAll;
-              }
-              return item;
-          })
-          this.sumAllSelect()
-      },
-      sumAllSelect:function(){
-          let isAll=true;
-          let totalMoney=0;
-          this.carList.map(item=>{
-              if(!item.isSelect){
-                  isAll=false;
-              }
-              item.shoping.map(item1=>{
-                  if(item1.isSelect){
-                      totalMoney+=item1.count*parseFloat(item1.price);
-                  }
-                  
-              })
-          })
-          this.allSelect=isAll;
-          this.totalPrice=totalMoney;
-      },
-      haddleSelectAll:function(select){
-          this.carList=this.carList.map(item=>{
-              item.shoping.forEach(item1=>{
+    handleDeleteStore:function(id){
+        for(let i=0;i<this.carList.length;i++){
+            if(id==this.carList[i].id){
+                this.carList.splice(i,1)
+            }
+        }
+        this.sumAllSelect()
+    },
+    handleSelectStore:function(select,id){
+        this.carList=this.carList.map(item=>{
+            if(item.id==id){
+                item.isSelect=select;
+                item.shoping.forEach(item1=>{
                     item1.isSelect=select;
                     return item1;
-              })
-              item.isSelect=select;
-              return item;
-          })
-          this.sumAllSelect()
-      }
+                })
+            }
+            return item;
+        })
+        this.sumAllSelect()
+    },
+    handleSelectShoping:function(id,shopId){
+        this.carList=this.carList.map(item=>{
+            if(item.id==id){
+                item.shoping.forEach(item1=>{
+                    if(item1.id==shopId){
+                        console.log(item1.id,shopId)
+                        item1.isSelect=!item1.isSelect;
+                    }
+                    return item1;
+                })
+                let isAll=true;
+                item.shoping.map(item1=>{
+                    if(!item1.isSelect){
+                        isAll=false;
+                    }
+                })
+                item.isSelect=isAll;
+            }
+            return item;
+        })
+        this.sumAllSelect()
+    },
+    sumAllSelect:function(value, detail){
+        let isAll=true;
+        let totalMoney=0;
+        this.carList.map(item=>{
+            if(!item.isSelect){
+                isAll=false;
+            }
+            item.shoping.map(item1=>{
+                if(item1.isSelect){
+                    totalMoney+=item1.count*parseFloat(item1.price);
+                }
+
+            })
+        })
+        this.allSelect=isAll;
+        this.totalPrice=totalMoney;
+        if(detail && detail.name) {
+          var detailIndex = detail.name.split('&')
+          this.$http.put(this.baseUrl + '/yunchao/cart/setNum?token=' + localStorage.getItem('cookie') + '&storeId=' + detailIndex[1].split('=')[1] + '&productId=' + detailIndex[0].split('=')[1] + '&num=' + value).then(res => {})
+        }
+    },
+    haddleSelectAll:function(select){
+        this.carList=this.carList.map(item=>{
+            item.shoping.forEach(item1=>{
+                  item1.isSelect=select;
+                  return item1;
+            })
+            item.isSelect=select;
+            return item;
+        })
+        this.sumAllSelect()
+    },
+    closeBtn: function() {
+      this.$emit('closeBtn')
+    },
+    createOrder: function() {
+
+    }
   }
 }
 </script>
@@ -326,7 +297,7 @@ export default {
                                     font-weight:400;
                                     color:rgba(213,37,33,1);
                                     line-height:45px;
-                                
+
                                 }
                                 .van-stepper__minus, .van-stepper__plus{
                                     background:none;
@@ -359,8 +330,8 @@ export default {
                             }
                         }
                       }
-                      
-                      
+
+
                   }
               }
               .car-item-box:nth-of-type(1){

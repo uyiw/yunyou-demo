@@ -16,7 +16,7 @@
     <div class="shouye-banner">
       <swiper :options="swiperOption">
         <swiper-slide v-for="(item, index) in bannerList1" :key="index">
-          <img :src="item.imgs" @click="goToDetail(index)" />
+          <img :src="item.imgs" />
         </swiper-slide>
       </swiper>
     </div>

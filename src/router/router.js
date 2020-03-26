@@ -1,10 +1,19 @@
 export default[
   {
     path: '/',
+    name: 'login',
+    component: () => import('@/view/login'),
+    meta: {
+      logined: false
+    }
+  },
+  {
+    path: '/index',
     name: 'index',
     component:  () => import('@/view/index'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
@@ -12,7 +21,8 @@ export default[
     name: 'newsList',
     component:  () => import('@/view/newsList'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
@@ -20,7 +30,8 @@ export default[
     name: 'xiangsu',
     component: () => import('@/view/xiangsu'),
     meta: {
-      title: 'njb'
+      title: 'njb',
+      logined: true
     }
   },
   {
@@ -28,7 +39,8 @@ export default[
     name: 'xiangsuDetail',
     component: () => import('@/view/xiangsuDetail'),
     meta: {
-      title: 'njb'
+      title: 'njb',
+      logined: true
     }
   },
   {
@@ -36,20 +48,26 @@ export default[
     name: 'techan',
     component: () => import('@/view/techan'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
     path: '/techanDetail',
     name: 'techanDetail',
-    component: () => import('@/view/techanDetail')
+    component: () => import('@/view/techanDetail'),
+    meta: {
+      title: 'index',
+      logined: true
+    }
   },
   {
     path: '/food',
     name: 'food',
     component: () => import('@/view/food'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
@@ -57,7 +75,8 @@ export default[
     name: 'foodList',
     component: () => import('@/view/foodList'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
@@ -65,7 +84,8 @@ export default[
     name: 'foodDetail',
     component: () => import('@/view/foodDetail'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
@@ -73,14 +93,16 @@ export default[
     name: 'scenic',
     component: () => import('@/view/scenic'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },{
     path: '/scenicList',
     name: 'scenicList',
     component: () => import('@/view/scenicList'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
@@ -88,7 +110,8 @@ export default[
     name: 'scenicDetail',
     component: () => import('@/view/scenicDetail'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
@@ -96,7 +119,8 @@ export default[
     name: 'attractions',
     component: () => import('@/view/attractions'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
@@ -104,7 +128,8 @@ export default[
     name: 'travels',
     component: () => import('@/view/travels'),
     meta: {
-      title: 'travels'
+      title: 'travels',
+      logined: true
     }
   },
   {
@@ -112,7 +137,8 @@ export default[
     name: 'travelsDetail',
     component: () => import('@/view/travelsDetail'),
     meta: {
-      title: 'travels'
+      title: 'travels',
+      logined: true
     }
   },
   {
@@ -127,19 +153,27 @@ export default[
   {
     path: '/paysuccess',
     name: 'paysuccess',
-    component: () => import('@/view/paySuccess')
+    component: () => import('@/view/paySuccess'),
+    meta: {
+      logined: true
+    }
   },
   {
     path: '/paytotal',
     name: 'paytotal',
-    component: () => import('@/view/payTotal')
+    component: () => import('@/view/payTotal'),
+    meta: {
+      logined: true
+    }
+
   },
   {
     path: '/my',
     name: 'my',
     component: () => import('@/view/my'),
     meta: {
-      title: 'wode'
+      title: 'wode',
+      logined: true
     }
   },
   {
@@ -147,7 +181,8 @@ export default[
     name: 'message',
     component: () => import('@/view/message'),
     meta: {
-      title: 'wode'
+      title: 'wode',
+      logined: true
     }
   },
   {
@@ -155,7 +190,8 @@ export default[
     name: 'order',
     component: () => import('@/view/order'),
     meta: {
-      title: 'wode'
+      title: 'wode',
+      logined: true
     }
   },
   {
@@ -163,7 +199,8 @@ export default[
     name: 'newsDetail',
     component: () => import('@/view/newsDetail'),
     meta: {
-      title: 'index'
+      title: 'index',
+      logined: true
     }
   },
   {
@@ -174,11 +211,6 @@ export default[
       title: 'wode',
       logined: true
     }
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/view/login')
   },
   {
     path: '/myyouji',

@@ -11,7 +11,7 @@
         </div>
     </div>
     <buy :flag="flag" @clickCar="clickCar" @collect="collect" @showCar="showCar"></buy>
-    <car v-if="show" />
+    <car v-if="show" :carList1="carList1" @closeBtn="closeBtn" />
   </div>
 </template>
 <script>
@@ -35,6 +35,7 @@ export default {
       navText:'详情',
       flag: '',
       specialLocalProduct: {},
+      carList1: []
     }
   },
   components: {
@@ -63,7 +64,7 @@ export default {
     clickCar: function() {
       this.$http.post(this.baseUrl + '/yunchao/cart/add?specialtyId=' + this.$route.query.id + '&token=' + localStorage.getItem('cookie')).then(res => {
         if(res.data.message == '用户没有登录') {
-          this.$router.push('/login')
+          this.$router.push('/')
         }else if(res.data.message == '操作成功') {
           Toast.success(res.data.message)
         }else {
@@ -80,7 +81,7 @@ export default {
       }
       this.$http.post(url).then(res => {
         if(res.data.message == '用户未登录!') {
-          this.$router.push('/login')
+          this.$router.push('/')
         }else if (res.data.data[0] == '点赞成功') {
           this.flag = 1;
           this.specialLocalProduct.flag = 1;
@@ -96,21 +97,41 @@ export default {
     },
     showCar() {
       this.show = true;
+
       this.$http.get(this.baseUrl + '/yunchao/cart/query?token=' + localStorage.getItem('cookie')).then(res => {
-        if(res.data.data && res.data.data.length) {
+        if(res.data.data && res.data.data.length > 0) {
+          this.carList1 =[];
           res.data.data.forEach(item => {
-            // this.carList.push({
-            //     id: item.cartProducts.productId,
-            //     img: item.cartProducts.imageUrl,
-            //     name: item.cartProducts.name,
-            //     guige:'规格',
-            //     price: item.cartProducts.price,
-            //     count: item.cartProducts.cartNum,
-            //     isSelect:false,
-            // })
+            var shoping = [];
+            item.cartProducts.forEach(item1 => {
+              shoping.push({
+                id: item1.productId,
+                img: item1.imageUrl,
+                name: item1.name,
+                guige:'规格',
+                price: item1.price,
+                count: item1.cartNum,
+                isSelect:false,
+              })
+            })
+            this.carList1.push({
+              storeName: item.cartStore.name,
+              isSelect:false,
+              id: item.cartStore.storeId,
+              shoping: shoping
+            })
           })
+        }else {
+          if(res.data.message == '用户没有登录') {
+            this.$router.push('/')
+          }else {
+            Toast.fail(res.data.message)
+          }
         }
       })
+    },
+    closeBtn() {
+      this.show = false;
     }
   }
 }

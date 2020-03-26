@@ -5,27 +5,28 @@
       <div class="collect-nav-box">
         <div v-for="(item,index) in navList" :class="navId==item.id?'collect-nav active':'collect-nav'" :key="index" @click="handleChangeNav(item.id)">{{item.text}}</div>
       </div>
-      <div class="collect-list">
-        <van-list
+      <van-list
           v-model="loading"
           :finished="finished"
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <div class="techan-item" v-for="(item,index) in dataList" :key="index">
-            <img class="techan-item-img" :src="item.img">
+        <div class="collect-list">
+          <div class="techan-item" v-for="(item,index) in dataList" :key="index" @click="goToDetail(item.id)">
+            <img class="techan-item-img" :src="item.imgs">
             <div class="techan-item-name-box">
               <div>{{item.name}}</div>
-              <img src="../assets/img/heart.png" />
+              <img @click.stop="cancelCollect(item.id)" src="../assets/img/like.png" />
             </div>
           </div>
-        </van-list>
-      </div>
+        </div>
+      </van-list>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
   </div>
 </template>
 <script>
+import { Toast } from 'vant'
 import commonBottom from '../components/commonBottom'
 import commonNav from '../components/commonNav'
 export default {
@@ -62,17 +63,54 @@ export default {
     getData() {
       var url = ''
       if(this.page == 1) this.dataList = []
-      this.$http.get(this.baseUrl + '/yunchao/favor/search/'+ this.page +'/10?token=' + localStorage.getItem('cookie')).then(res => {
-        if(res.data.data.result && res.data.data.result.length > 0) {
-          res.data.data.result.forEach(item => {
+      this.$http.get(this.baseUrl + '/yunchao/favor/search/'+ this.page +'/10?type=' + this.navId + '&token=' + localStorage.getItem('cookie')).then(res => {
+        if(res.data.data[0] && res.data.data[0].length > 0) {
+          res.data.data[0].forEach(item => {
             this.dataList.push(item)
           })
-          this.totalNum = res.data.data.pagination.totalCount;
+          this.totalNum = res.data.data[1];
           if(this.totalNum <= this.dataList.length) {
             this.finished = true;
           }
         }else {
           this.dataList = []
+        }
+      })
+    },
+    goToDetail: function(id) {
+      if(this.navId == 5) {
+        this.$router.push('/attractions?id=' + id)
+      }else if(this.navId == 2) {
+        this.$router.push('/xiangsuDetail?id=' + id)
+      }else if(this.navId == 10) {
+        this.$router.push('/techanDetail?id=' + id)
+      }else if(this.navId == 6) {
+        this.$router.push('/travelsDetail?id=' + id)
+      }
+    },
+    cancelCollect: function(id) {
+       var url = ''
+      if(this.navId == 5) {
+        url = this.baseUrl + '/yunchao/scenic/favor/cancel/' + id + '?token=' + localStorage.getItem('cookie')
+
+      }else if (this.navId == 2) {
+        url = this.baseUrl + '/yunchao/rural/favor/cancel/' + id + '?token=' + localStorage.getItem('cookie')
+      }else if (this.navId == 10) {
+        url = this.baseUrl + '/yunchao/specialty/favor/cancel/' + id + '?token=' + localStorage.getItem('cookie')
+      }else if(this.navId == 6) {
+        url = this.baseUrl + '/yunchao/travels/favor/cancel/' + id + '?token=' + localStorage.getItem('cookie')
+      }
+
+      this.$http.post(url).then(res => {
+        if(res.data.message == '用户未登录!') {
+          this.$router.push('/')
+        }else if (res.data.data[0] == '取消成功') {
+
+          Toast.success(res.data.data[0])
+          this.page = 1;
+          this.getData();
+        }else {
+          Toast.fail(res.data.message)
         }
       })
     },
@@ -82,15 +120,6 @@ export default {
         this.getData();
       }
     },
-  },
-  beforeRouteEnter (to, from, next) {
-    if(to.meta.logined) {
-      if(localStorage.getItem('login') == 0) {
-        window.location.href = '#/login'
-      }else {
-        next();
-      }
-    }
   },
   components: {
     commonNav,
@@ -133,10 +162,10 @@ export default {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    margin-top:30px;
+    margin:30px auto 0;
     padding-bottom: 30px;
     .techan-item{
-        width:330px;
+      width: 330px;
         display: flex;
         flex-direction: column;
         margin-bottom: 11px;

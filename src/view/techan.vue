@@ -119,7 +119,7 @@ export default {
       }
       this.$http.post(url).then(res => {
         if(res.data.message == '用户未登录!') {
-          this.$router.push('/login')
+          this.$router.push('/')
         }else if (res.data.data[0] == '点赞成功') {
           this.techanList.forEach(item => {
             if(item.id == id) {

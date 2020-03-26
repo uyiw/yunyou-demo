@@ -17,7 +17,7 @@ export default {
           icon: require('@/assets/img/index.png'),
           iconIndex: require('@/assets/img/index_g.png'),
           title: '首页',
-          url: '/'
+          url: '/index'
         },
         {
           meta: 'njb',
@@ -45,8 +45,13 @@ export default {
   },
   mounted() {
     this.$http.get(this.baseUrl + '/yunchao/user/isLogin?token=' + localStorage.getItem('cookie')).then(res => {
-      if(res.data) localStorage.setItem('login', 1)
-      else localStorage.setItem('login', 0)
+      if(res.data) {
+        localStorage.setItem('login', 1);
+        this.$emit('knowOwner', res.data.id)
+      }else {
+        localStorage.setItem('login', 0)
+        this.$router.push('/')
+      }
     })
   }
 }

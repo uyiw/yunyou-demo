@@ -125,7 +125,7 @@ export default {
           res.data.data.result.forEach(item => {
             item.imgUrl = item.arrImgs[0];
             item.dis = '距您直线距离4公里靠近江边';
-            item.score = item.score ? parseInt(item.score) : 0
+            item.score = item.score ? parseFloat(item.score) : 0
             this.hotelList.push(item)
           });
           this.totalNum = res.data.data.pagination.totalCount

@@ -9,14 +9,13 @@
             </router-link>
         </div>
     </div>
-    <div v-if="info.id" class="my-info-box">
+    <div class="my-info-box">
       <img :src="info.img" />
       <div class="my-info-box-right">
           <div>{{ info.nickname }}</div>
           <div>ID：{{  info.id }}</div>
       </div>
     </div>
-    <div v-else class="my-info-box" style="font-size: 20px;color: #fff;">登录</div>
     <div class="my-list-box">
         <router-link tag="div" to="/collect" class="my-item-box">
           <img src="../assets/img/myLove.png" />
@@ -26,10 +25,10 @@
           <img src="../assets/img/myYouji.png" />
           <div>我的游记</div>
         </router-link>
-        <div class="my-item-box">
+        <router-link tag="div" to="order" class="my-item-box">
             <img src="../assets/img/myOrder.png" />
             <div>我的订单</div>
-        </div>
+        </router-link>
         <div class="my-item-box">
             <img src="../assets/img/myPhone.png" />
             <div>客服电话</div>
