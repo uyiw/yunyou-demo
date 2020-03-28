@@ -66,7 +66,8 @@ export default {
           this._props.cancelFn==""?this.hideToast():this.props.cancelFn()
       },
       sureFn1:function(){
-          this._props.sureFn==""?this.hideToast():this.props.sureFn()
+          // this._props.sureFn==""?this.hideToast():this.props.sureFn()
+          this.$router.go(-1)
       },
       maskClose1:function(){
           this._props.maskClose==false?'':this.hideToast()
@@ -76,6 +77,7 @@ export default {
       },
       hideToast:function(){
           this.visibale=false
+          this.$emit('backOrder')
       },
       prevent:function(event){
           event.stopPropagation?event.stopPropagation():'';

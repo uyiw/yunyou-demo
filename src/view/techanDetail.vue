@@ -3,7 +3,7 @@
     <commonNav :navText="navText"></commonNav>
     <commonSwiper :bannerList="bannerList"></commonSwiper>
     <div class="techan-detail-content">
-        <detailNameBox :name="specialLocalProduct.name"></detailNameBox>
+        <detailNameBox :name="specialLocalProduct.name" :like="true"></detailNameBox>
         <pointTitle text="推荐购买地址"></pointTitle>
         <addressPhone :location="detailInfo.address" :phone="detailInfo.phone" :toUrl="detailInfo.toUrl"></addressPhone>
         <div class="techan-detail-point-box">
@@ -112,6 +112,7 @@ export default {
                 price: item1.price,
                 count: item1.cartNum,
                 isSelect:false,
+                storeId: item.cartStore.storeId,
               })
             })
             this.carList1.push({

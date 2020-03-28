@@ -6,13 +6,13 @@
       <div class="techan-select-box">
         <div v-for="(item,index) in selectTag" :key="index" :class="item.id == activeId?'active':''" @click="handleChangeTab(item.id)">{{item.text}}</div>
       </div>
-      <div class="techan-list-box">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="onLoad"
-        >
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <div class="techan-list-box">
           <div class="techan-item" v-for="(item,index) in techanList" :key="index" @click="goToDetail(item.id)">
             <img class="techan-item-img" :src="item.imageUrls">
             <div class="techan-item-name-box">
@@ -20,8 +20,8 @@
               <img @click.stop="collect(item.id, item.flag)" :src="item.flag ? require('@/assets/img/like.png') : require('@/assets/img/noLike.png')" />
             </div>
           </div>
-        </van-list>
-      </div>
+        </div>
+      </van-list>
     </div>
     <commonBottom :meta="$route.meta.title"></commonBottom>
   </div>

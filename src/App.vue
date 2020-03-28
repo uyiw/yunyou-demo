@@ -41,7 +41,7 @@ export default {
   line-height: 60px!important;
   height: auto!important;
 }
-.van-list__finished-text {
+.van-list__finished-text, .van-loading__text {
   font-size: 26px!important;
 }
 

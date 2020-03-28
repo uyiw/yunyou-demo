@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <commonNav :navText="navText"></commonNav>
+    <commonNav :navText="navText" :back="true"></commonNav>
     <div class="login-content">
         <div class="login-title">注册/登录</div>
         <div class="inputBox firstInput">
@@ -91,9 +91,16 @@ export default {
       }
       this.$http.get(this.baseUrl + '/yunchao/user/login/code?code='+ this.code +'&phone=' + this.phone).then(res => {
         if(res.data.data) {
-          localStorage.setItem('cookie', res.data.data)
-          localStorage.setItem('login', 1)
-          this.$router.push('/index')
+          if(res.data.data.indexOf('https') !== -1) {
+            window.location.href= res.data.data
+          }else {
+            localStorage.setItem('cookie', res.data.data)
+            localStorage.setItem('login', 1)
+            this.$router.push('/index')
+          }
+          // localStorage.setItem('cookie', res.data.data)
+          // localStorage.setItem('login', 1)
+          // this.$router.push('/index')
         }else {
           Toast.fail(res.data.message)
         }

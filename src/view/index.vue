@@ -73,6 +73,13 @@ export default {
       page: 0,
     }
   },
+  watch: {
+    areaId: function(newVal, oldVal) {
+      if(!oldVal && newVal && !localStorage.getItem('area')) {
+        this.getData();
+      }
+    }
+  },
   components: {
     commonHeader,
     commonBottom
@@ -108,19 +115,21 @@ export default {
 
     },
     getData() {
-      var url = this.baseUrl + '/yunchao/index/scenicSpot/list/' + this.areaId + '/' + this.page + '/10?scenicName=' + this.value + '&type=' + this.tabIndex
-      if(this.page <= 1) this.dataList = [];
-      this.$http.get(url).then(res => {
-        if(res.data.data.result && res.data.data.result.length > 0) {
-          res.data.data.result.forEach(item => {
-              item.num = 999
-              this.dataList.push(item)
-          });
+      if(this.areaId) {
+        var url = this.baseUrl + '/yunchao/index/scenicSpot/list/' + this.areaId + '/' + this.page + '/10?scenicName=' + this.value + '&type=' + this.tabIndex
+        if(this.page <= 1) this.dataList = [];
+        this.$http.get(url).then(res => {
+          if(res.data.data.result && res.data.data.result.length > 0) {
+            res.data.data.result.forEach(item => {
+                item.num = 999
+                this.dataList.push(item)
+            });
+          }
           if(this.dataList.length >= res.data.data.pagination.totalCount) {
             this.finished = true;
           }
-        }
-      })
+        })
+      }
     },
     onLoad: function() {
       this.getData();

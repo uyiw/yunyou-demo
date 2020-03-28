@@ -2,8 +2,8 @@
   <div id="order">
     <commonNav :navText="navText"></commonNav>
     <div class="order-nav-box">
-        <div @click="changeNav(1)" :class="navId==1?'order-nav-item active':'order-nav-item'">全部</div>
-        <div @click="changeNav(2)" :class="navId==2?'order-nav-item active':'order-nav-item'">代付款</div>
+        <div @click="changeNav(4)" :class="navId==1?'order-nav-item active':'order-nav-item'">全部</div>
+        <div @click="changeNav(1)" :class="navId==2?'order-nav-item active':'order-nav-item'">待付款</div>
     </div>
     <div class="order-list">
       <van-list
@@ -88,12 +88,12 @@ export default {
   },
   methods:{
     changeNav:function(id){
-      this.navId!=id?this.navId=id:''
+      this.navId !=id ? this.navId=id :''
       this.page = 1;
       this.getData();
     },
     getData() {
-      this.$http.get(this.baseUrl + '/yunchao/order/query/'+ this.page +'/10?token=' + localStorage.getItem('cookie')).then(res => {
+      this.$http.get(this.baseUrl + '/yunchao/order/query/'+ this.page +'/10?token=' + localStorage.getItem('cookie') + '$status=' + this.navId == 4 ? '' : this.navId).then(res => {
         if(res.data.data.result && res.data.data.result.length > 0) {
           res.data.data.result.forEach(element => {
 

@@ -2,7 +2,7 @@
   <div class="common-detail-name-box">
     <div class="common-detail-name-white"></div>
     <div class="common-detail-name">{{name}}</div>
-    <div  class="common-detail-like-box">
+    <div v-if="!like" class="common-detail-like-box">
         <div v-if="likeCount>0">{{likeCount>9999?'9999+':likeCount}}</div>
         <img @click="collect" :src="flag ? require('@/assets/img/like.png') : require('@/assets/img/noLike.png') ">
     </div>
@@ -20,6 +20,9 @@ export default {
           default:0
       },
       flag: {
+        type: Boolean
+      },
+      like: {
         type: Boolean
       }
   },

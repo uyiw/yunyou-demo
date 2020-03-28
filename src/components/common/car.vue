@@ -6,12 +6,11 @@
             <div>购物车</div>
         </div>
         <div class="car-list-box">
-            <div class="car-item-box" v-for="(item,index) in carList" :key="index">
+            <div v-if="carList.length > 0" class="car-item-box" v-for="(item,index) in carList" :key="index">
                 <div class="store-header">
                     <img @click="handleSelectStore(true,item.id)" v-if="!item.isSelect" src="../../assets/img/noSelect.png" class="store-no-select">
                     <img @click="handleSelectStore(false,item.id)" v-else class="store-select" src="../../assets/img/carSelect.png" />
                     <div class="store-name">{{item.storeName}}</div>
-                    <img @click="handleDeleteStore(item.id)" class="store-delete" src="../../assets/img/close.png">
                 </div>
                 <div class="shop-box">
                     <div class="shop-item-box" v-for="(item1,index1) in item.shoping" :key="index1">
@@ -19,6 +18,7 @@
                         <img @click="handleSelectShoping(item.id,item1.id)" v-else class="store-select" src="../../assets/img/carSelect.png" />
                         <img class="shop-img" :src="item1.img" />
                         <div class="shop-right">
+                            <img @click="handleDeleteStore(item1.id, item.id)" class="store-delete" src="../../assets/img/close.png">
                             <div class="shop-name">{{item1.name}}</div>
                             <div class="shop-guige">{{item1.guige}}</div>
                             <div class="shop-price-box">
@@ -29,6 +29,7 @@
                     </div>
                 </div>
             </div>
+            <div v-else class="no-data">暂无数据</div>
         </div>
         <div class="car-bottom">
             <div class="car-bottom-left">
@@ -46,6 +47,7 @@
   </div>
 </template>
 <script>
+import { Toast } from 'vant'
 export default {
   props: ['carList1'],
   data() {
@@ -54,7 +56,8 @@ export default {
       totalPrice:0,
       carList: [{
         shoping: []
-      }]
+      }],
+      logisticsId: ''
     }
   },
   watch: {
@@ -63,15 +66,35 @@ export default {
     }
   },
   methods:{
-    handleDeleteStore:function(id){
-        for(let i=0;i<this.carList.length;i++){
-            if(id==this.carList[i].id){
-                this.carList.splice(i,1)
+    handleDeleteStore:function(productId, storeId){
+        this.$http.get(this.baseUrl + '/yunchao/cart/deleteCart?token=' +localStorage.getItem('cookie') + '&productId=' + productId + '&storeId=' + storeId).then(res => {
+          if(res.data.message == '操作成功') {
+            Toast.success('删除成功')
+            for(let i=0;i<this.carList.length;i++){
+                if(this.carList[i].id == storeId){
+                  if(this.carList[i].shoping.length > 0) {
+                    for(let j = 0; j < this.carList[i].shoping.length; j++) {
+                      if(this.carList[i].shoping[j].id == productId) {
+                        this.carList[i].shoping.splice(j,1)
+                        j--;
+                        if(this.carList[i].shoping.length == 0) {
+                          this.carList.splice(i, 1)
+                          i--;
+                        }
+                      }
+                    }
+                  }
+                }
             }
-        }
-        this.sumAllSelect()
+            this.sumAllSelect()
+            // this.getData();
+          }else {
+            Toast.fail(res.data.message)
+          }
+        })
+
     },
-    handleSelectStore:function(select,id){
+    handleSelectStore:function(select, id){
         this.carList=this.carList.map(item=>{
             if(item.id==id){
                 item.isSelect=select;
@@ -89,7 +112,6 @@ export default {
             if(item.id==id){
                 item.shoping.forEach(item1=>{
                     if(item1.id==shopId){
-                        console.log(item1.id,shopId)
                         item1.isSelect=!item1.isSelect;
                     }
                     return item1;
@@ -142,7 +164,67 @@ export default {
       this.$emit('closeBtn')
     },
     createOrder: function() {
-
+      var storeData = [];
+      var data = [], selectData = [];
+      for(var i = 0; i < this.carList.length; i++) {
+        for(var j =0; j < this.carList[i].shoping.length; j++) {
+          if(this.carList[i].shoping[j].isSelect) {
+            data.push(this.carList[i].shoping[j])
+            if(storeData.length <= 0) storeData.push({ "name": this.carList[i].storeName,  "storeId": this.carList[i].id})
+            else {
+              for(let z = 0; z < storeData.length; z++) {
+                if(this.carList[i].id != storeData[z].storeId ) {
+                  storeData.push({ "name": this.carList[i].storeName,  "storeId": this.carList[i].id})
+                }
+              }
+            }
+          }
+        }
+      }
+      for(var i = 0; i < storeData.length; i++) {
+        for(var z = 0; z < data.length; z++) {
+          if(storeData[i].storeId == data[z].storeId) {
+            if(selectData.length == 0) selectData.push({"cartStore": storeData[i], "cartProducts": [{
+                    "name": data[z].name,
+                    "price": data[z].price,
+                    "storeId": data[z].storeId,
+                    "cartNum": data[z].count,
+                    "productId": data[z].id,
+                    "imageUrl": data[z].img
+                  }]})
+            else {
+              for(var k = 0 ;k < selectData.length; k++) {
+                if(storeData[i].storeId == selectData[k].cartStore.storeId) {
+                  selectData[k].cartProducts.push({
+                    "name": data[z].name,
+                    "price": data[z].price,
+                    "storeId": data[z].storeId,
+                    "cartNum": data[z].count,
+                    "productId": data[z].id,
+                    "imageUrl": data[z].img
+                  })
+                }else {
+                  selectData.push({"cartStore": storeData[i], "cartProducts": [{
+                    "name": data[z].name,
+                    "price": data[z].price,
+                    "storeId": data[z].storeId,
+                    "cartNum": data[z].count,
+                    "productId": data[z].id,
+                    "imageUrl": data[z].img
+                  }]})
+                }
+              }
+            }
+          }
+        }
+      }
+      this.$http.post(this.baseUrl + '/yunchao/order/create?token='+ localStorage.getItem('cookie') +'&logisticsId='+ this.logisticsId +'&price='+ this.totalPrice +'&payMethod=2', selectData).then(res=> {
+        if(res.data.data) {
+          this.$router.push('/payTotal?id=' + res.data.data);
+        }else {
+          Toast.fail(res.data.message)
+        }
+      })
     }
   }
 }
@@ -194,6 +276,13 @@ export default {
               flex-direction:column;
               max-height:906px;
               overflow:scroll;
+              .no-data {
+                font-size:36px;
+                font-family:PingFangSC-Regular,PingFang SC;
+                font-weight:400;
+                color:rgba(45,45,45,1);
+                text-align: center;
+              }
               .car-item-box{
                   width:100%;
                   margin-top:20px;
@@ -226,11 +315,6 @@ export default {
                           height:30px;
                           flex-shrink:0;
                       }
-                      .store-delete{
-                          width:20px;
-                          height:20px;
-                          flex-shrink:0;
-                      }
 
                   }
                   .shop-box{
@@ -258,6 +342,14 @@ export default {
                             flex-direction:column;
                             margin-left:26px;
                             height:200px;
+                            position: relative;
+                            .store-delete{
+                                width:20px;
+                                height:20px;
+                                position: absolute;
+                                top:10px;
+                                right:0;
+                            }
                             .shop-name{
                                 font-size:32px;
                                 font-family:PingFangSC-Regular,PingFang SC;

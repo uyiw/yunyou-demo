@@ -13,7 +13,7 @@ module.exports = {
     // 解决跨域问题
     proxyTable: {
       '/api': {
-        target: 'http://101.200.210.141:8080',
+        target: 'http://101.200.210.141:80',
         changeOrigin: true,
         pathRewrite: {
           '/api': ''
@@ -22,8 +22,8 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    host: '192.168.1.7', // can be overwritten by process.env.HOST
+    port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

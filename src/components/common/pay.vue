@@ -8,39 +8,29 @@
         </div>
     </div>
     <div class="pay-type-title">支付方式(可以选择任意支付方式）</div>
-    <div class="pay-item" @click="changeType(1)">
-        <img class="pay-item-icon" src="../../assets/img/wx.png" />
-        <img v-if="payType==1" class="pay-select" src="../../assets/img/carSelect.png">
-        <img v-else class="pay-select" src="../../assets/img/noSelect.png">
-    </div>
     <div class="pay-item" @click="changeType(2)">
-        <img class="pay-item-icon" src="../../assets/img/apply.png" />
+        <img class="pay-item-icon" src="../../assets/img/wx.png" />
         <img v-if="payType==2" class="pay-select" src="../../assets/img/carSelect.png">
         <img v-else class="pay-select" src="../../assets/img/noSelect.png">
     </div>
+    <!-- <div class="pay-item" @click="changeType(2)">
+        <img class="pay-item-icon" src="../../assets/img/apply.png" />
+        <img v-if="payType==2" class="pay-select" src="../../assets/img/carSelect.png">
+        <img v-else class="pay-select" src="../../assets/img/noSelect.png">
+    </div> -->
     <div class="pay-button-box">
-        <div class="pay-button">￥{{totalMoney.toFixed(2)}}/确认支付</div>
+        <div class="pay-button" @click="confirmClick">￥{{parseFloat(totalPrice).toFixed(2)}}/确认支付</div>
     </div>
-    <toast></toast>
+    <toast v-if="show" @backOrder="backOrder"></toast>
   </div>
 </template>
 <script>
 import toast from "./toast"
 export default {
-  props:{
-      name:{
-          type:String,
-          default:'详情介绍'
-      },
-      likeCount:{
-          type:Number,
-          default:0
-      }
-  },
+  props:['show', 'totalPrice'],
   data() {
     return {
-        payType:1,
-        totalMoney:100,
+        payType: 2,
     }
   },
   methods:{
@@ -48,6 +38,12 @@ export default {
           if(this.payType!=type){
               this.payType=type;
           }
+      },
+      backOrder: function() {
+        this.$emit('backOrder')
+      },
+      confirmClick: function() {
+        this.$emit('confirmClick')
       }
   },
   components:{
