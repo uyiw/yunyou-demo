@@ -221,4 +221,12 @@ export default[
       logined: true
     }
   },
+  {
+    path: '/loading',
+    name: 'loading',
+    component: () => import('@/view/loading'),
+    meta: {
+      logined: false
+    },
+  }
 ]

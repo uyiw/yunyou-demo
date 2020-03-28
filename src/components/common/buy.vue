@@ -13,7 +13,7 @@
         </div>
         <div class="buy-right">
             <div class="add-car" @click="addCar">加入购物车</div>
-            <div class="buy-now">立即购买</div>
+            <div class="buy-now" @click="buyNow">立即购买</div>
         </div>
     </div>
   </div>
@@ -46,6 +46,9 @@ export default {
     },
     showCar() {
       this.$emit('showCar')
+    },
+    buyNow() {
+      this.$emit('buyNow')
     }
   }
 }

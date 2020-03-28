@@ -10,7 +10,7 @@
           <pointCard :content="detailInfo.detail.content" :text="detailInfo.detail.title"></pointCard>
         </div>
     </div>
-    <buy :flag="flag" @clickCar="clickCar" @collect="collect" @showCar="showCar"></buy>
+    <buy :flag="flag" @clickCar="clickCar" @collect="collect" @showCar="showCar" @buyNow="buyNow"></buy>
     <car v-if="show" :carList1="carList1" @closeBtn="closeBtn" />
   </div>
 </template>
@@ -35,7 +35,10 @@ export default {
       navText:'详情',
       flag: '',
       specialLocalProduct: {},
-      carList1: []
+      carList1: [],
+      logisticsId: '',
+      price: '',
+      localSpecialty: ''
     }
   },
   components: {
@@ -58,6 +61,7 @@ export default {
       }
       this.specialLocalProduct = res.data.specialLocalProduct
       this.flag = res.data.specialLocalProduct.flag
+      this.localSpecialty = res.data.localSpecialty
     })
   },
   methods: {
@@ -97,7 +101,6 @@ export default {
     },
     showCar() {
       this.show = true;
-
       this.$http.get(this.baseUrl + '/yunchao/cart/query?token=' + localStorage.getItem('cookie')).then(res => {
         if(res.data.data && res.data.data.length > 0) {
           this.carList1 =[];
@@ -133,6 +136,31 @@ export default {
     },
     closeBtn() {
       this.show = false;
+    },
+    buyNow() {
+      var selectData = [
+        {
+          "cartStore": {
+            name:  this.localSpecialty.name,
+            storeId:  this.localSpecialty.storeId
+          },
+          "cartProducts": [{
+            "name": this.specialLocalProduct.name,
+            "price": this.specialLocalProduct.price,
+            "storeId":this.specialLocalProduct.storeId,
+            "cartNum": 1,
+            "productId": this.specialLocalProduct.id,
+            "imageUrl": this.specialLocalProduct.imageUrls
+          }]
+        }
+      ]
+      this.$http.post(this.baseUrl + '/yunchao/order/create?token='+ localStorage.getItem('cookie') +'&logisticsId='+ this.logisticsId +'&price='+ this.specialLocalProduct.price +'&payMethod=2', selectData).then(res=> {
+        if(res.data.data) {
+          this.$router.push('/payTotal?id=' + res.data.data);
+        }else {
+          Toast.fail(res.data.message)
+        }
+      })
     }
   }
 }

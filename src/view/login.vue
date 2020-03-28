@@ -107,9 +107,19 @@ export default {
       })
     },
     weChatLogin() {
-      // this.$http.get(this.baseUrl + '/yunchao/user/login/wechat').then(res => {
-      //   console.log()
-      // })
+     this.$http.get(this.baseUrl + '/yunchao/user/login/wechat').then(res => {
+        if(res.data.data) {
+          if(res.data.data.indexOf('https') !== -1) {
+            window.location.href= res.data.data
+          }else {
+            localStorage.setItem('cookie', res.data.data)
+            localStorage.setItem('login', 1)
+            this.$router.push('/index')
+          }
+        }else {
+          Toast.fail(res.data.message)
+        }
+      })
     }
   }
 }

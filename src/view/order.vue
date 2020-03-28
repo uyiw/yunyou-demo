@@ -2,16 +2,10 @@
   <div id="order">
     <commonNav :navText="navText"></commonNav>
     <div class="order-nav-box">
-        <div @click="changeNav(4)" :class="navId==1?'order-nav-item active':'order-nav-item'">全部</div>
-        <div @click="changeNav(1)" :class="navId==2?'order-nav-item active':'order-nav-item'">待付款</div>
+        <div @click="changeNav(4)" :class="navId==4?'order-nav-item active':'order-nav-item'">全部</div>
+        <div @click="changeNav(1)" :class="navId==1?'order-nav-item active':'order-nav-item'">待付款</div>
     </div>
-    <div class="order-list">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
+      <div class="order-list">
         <div class="order-item" v-for="(item,index) in orderList" :key="index">
             <div class="order-item-time">{{item.time}}</div>
             <div class="order-item-list">
@@ -19,31 +13,41 @@
                     <img :src="item1.img" />
                     <div class="order-item-item-right">
                         <div class="order-name-box">
-                            <div>{{item1.title}}</div>
-                            <div>¥{{item1.money.toFixed(2)}}</div>
+                            <div>{{item1.name}}</div>
+                            <div>¥{{parseFloat(item1.price).toFixed(2)}}</div>
                         </div>
                         <div class="order-guige-box">
                             <div>{{item1.guige}}</div>
-                            <div>x{{item1.count}}</div>
+                            <div>x{{item1.cartNum}}</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="order-bottom">共{{item.count}}件商品 实付金额：¥{{item.money.toFixed(2)}}</div>
+            <div class="order-bottom">共{{item.count}}件商品 实付金额：¥{{parseFloat(item.money).toFixed(2)}}</div>
         </div>
-      </van-list>
-    </div>
+      </div>
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      ></van-list>
     <commonBottom :meta="$route.meta.title"></commonBottom>
   </div>
 </template>
 <script>
 import commonBottom from '../components/commonBottom'
 import commonNav from '../components/commonNav'
+import utils from '../assets/js/utils'
 export default {
   data() {
     return {
 			navId:1,
       navText:'商品订单',
+      loading: false,
+      finished: false,
+      page: 0,
+      totalNum: 10,
       orderList: [],
 			// orderList:[{
 			// 		time:'2019-12-12  09:32',
@@ -80,36 +84,58 @@ export default {
 			// 				guige:"白色"
 			// 		}]
 			// }],
-      loading: false,
-      finished: false,
-      page: 0,
-      totalNum: 10,
+
     }
   },
   methods:{
     changeNav:function(id){
       this.navId !=id ? this.navId=id :''
       this.page = 1;
+      this.orderList = [];
       this.getData();
     },
     getData() {
-      this.$http.get(this.baseUrl + '/yunchao/order/query/'+ this.page +'/10?token=' + localStorage.getItem('cookie') + '$status=' + this.navId == 4 ? '' : this.navId).then(res => {
-        if(res.data.data.result && res.data.data.result.length > 0) {
-          res.data.data.result.forEach(element => {
+      this.$http.get(this.baseUrl + '/yunchao/order/query/'+ this.page +'/10?token=' + localStorage.getItem('cookie') + '&status=' + (this.navId == 4 ? '' : this.navId)).then(res => {
+        if(res.data.message == '用户没有登录'){
+          this.$router.push('/')
+        }else {
+          console.log(res.data.data.result)
+          if(res.data.data.result && res.data.data.result.length > 0) {
 
-          });
-        }
-        this.totalNum = res.data.data.pagination.totalCount;
-        if(this.totalNum <= this.orderList.length) {
-          this.finished = true;
+            res.data.data.result.forEach((item, index) => {
+              item.cartDBInfo.forEach(item1 => {
+                var num = 0;
+                item1.cartProducts.forEach(item2 => {
+                  num +=item2.cartNum
+                })
+                  item.num = num;
+              })
+              this.orderList.push({
+                time: utils.formatDate(item.createDate, 'yyyy-MM-dd HH:mm:ss'),
+                count: item.num,
+                money: item.price,
+                list: []
+              })
+            });
+             res.data.data.result.forEach((item, index) => {
+              item.cartDBInfo.forEach((item1, index1) => {
+                item1.cartProducts.forEach(item2 => {
+                  this.orderList[index].list.push(item2)
+                })
+              })
+            })
+          }
+          console.log(this.orderList)
+          this.totalNum = res.data.data.pagination.totalCount;
+          if(this.totalNum <= this.orderList.length) {
+            this.finished = true;
+          }
         }
       })
     },
     onLoad() {
       this.page += 1;
-      if(this.page >= 1) {
-        this.getData();
-      }
+      this.getData();
     },
   },
   components: {
